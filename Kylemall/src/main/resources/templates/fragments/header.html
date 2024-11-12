@@ -1,96 +1,54 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>커뮤니티 게시판</title>
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gugi&family=IBM+Plex+Sans+KR:wght@100&family=Jua&family=Orbit&display=swap"
-        rel="stylesheet"
-    />
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Gugi&family=IBM+Plex+Sans+KR:wght@100&family=Jua&family=Orbit&display=swap"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet" />
 </head>
-<!-- header -->
+<!-- Navigation-->
 <div th:fragment="header" class="container border-bottom">
-    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center align-items-center mb-md-0" style="height: 60px;">
-            <li>
-                <p href="#main_latout" class="nav-link px-2 link-secondary">
-                    <a class="fs-4 fw-bold text-decoration-none" href="mainList">
-						<img src="images/onedevelopLogo4.png" alt="원팀로고" style="width: 145px; height: 45px;">
-                    </a>
-                </p>
-            </li>
-            <div class="d-flex align-items-center">
-                <p href="boardList" class="nav-link px-2 link-body-emphasis ms-5 d-inline">
-					<a href="boardList" class="text-decoration-none text-black">전체게시글</a>
-					</p>
-                <p class="nav-link px-2 link-body-emphasis ms-3 d-inline">
-					<a href="boardList?orderType=like" class="text-decoration-none text-black">인기게시글</a>
-				</p>
-               </div>     
-                <div class="dropdown-center ms-3 mb-3">
-                   <button
-                    class="btn dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false" >
-                    카테고리
-                  </button>
-                  <ul class="dropdown-menu" style="margin-top: 0;">
-                     <li><a class="dropdown-item" href="boardList?category=1">자유게시판</a></li>
-                     <li><a class="dropdown-item" href="boardList?category=2">질문게시판</a></li>
-                     <li><a class="dropdown-item" href="boardList?category=3">지식게시판</a></li>
-                     <li><a class="dropdown-item" href="boardList?category=4">뉴스게시판</a></li>
-                  </ul>
-               </div>
-            </ul>
-
-        <!-- 회원일 경우 -->
-        <th:block th:if="${session.isLogin}">
-            <div class="dropdown text-end">
-                <a
-                    href="#"
-                    class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    <img
-                        src="images/oneteamLogo.png"
-                        alt="mdo"
-                        width="32"
-                        height="32"
-                        class="rounded-circle"
-                    />
-                </a>
-                <ul class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" th:href="@{addBoard(category=${category},orderType=${orderType})}">작성하기</a></li>
-                    <li><a class="dropdown-item" href="memberUpdateForm">회원수정</a></li>
-                    <li>
-                        <hr class="dropdown-divider" />
-                    </li>
-                    <li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
-                </ul>
-            </div>
-        </th:block>
-        <!-- 비회원일 경우 -->
-        <th:block th:unless="${session.isLogin}">
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a class="btn btn-primary btn-sm" th:href="@{loginForm}">로그인</a>
-                <a class="btn btn-primary btn-sm ms-2" href="joinForm">회원가입</a>
-            </div>
-        </th:block>
-    </div>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container px-4 px-lg-5">
+			<a class="navbar-brand" href="#!">Start Bootstrap</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" href="#!">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" id="navbarDropdown" href="#"
+						role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="#!">All Products</a></li>
+							<li><hr class="dropdown-divider" /></li>
+							<li><a class="dropdown-item" href="#!">Popular Items</a></li>
+							<li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+						</ul></li>
+				</ul>
+				<form class="d-flex">
+					<button class="btn btn-outline-dark" type="submit">
+						<i class="bi-cart-fill me-1"></i> Cart <span
+							class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+					</button>
+				</form>
+			</div>
+		</div>
+	</nav>
 </div>
 </html>

@@ -21,7 +21,7 @@ public class ProductController {
 		Map<String, Object> modelMap = productService.productList();
 		model.addAllAttributes(modelMap);
 		
-		return "views/index";
+		return "views/mainList";
 		
 	}
 	

@@ -22,5 +22,7 @@ public class Product {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	private Integer categoryNo;
+	private String saleOk;
+	private Integer salePrice;
 	
 }

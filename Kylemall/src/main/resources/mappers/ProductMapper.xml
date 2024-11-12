@@ -12,10 +12,13 @@
 -->
 <mapper namespace="com.kylemall.shop.mapper.ProductMapper">
 
+
+
 <!-- 전체 상품 리스트를 가져오는 맵핑 구문 -->
 <select id="productList" resultType="Product">
 	SELECT
-	*
+	p.product_no, p.product_name, p.product_description, p.product_price, p.stock_quantity,
+	p.image_url, p.created_at, p.updated_at, c.category_name, p.sale_ok, p.sale_price
 	FROM 
 	product AS p
 	JOIN
@@ -23,5 +26,8 @@
 	ORDER BY
 	p.created_at DESC
 </select>
+
+<!-- 전 -->
+
 
 </mapper>	

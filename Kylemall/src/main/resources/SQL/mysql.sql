@@ -3,6 +3,26 @@ DROP DATABASE IF EXISTS kylemall;
 CREATE database if not exists kylemall;
 use kylemall;
 
+######## 회원 ########
+DROP TABLE IF EXISTS member;
+CREATE TABLE IF NOT EXISTS member(
+id VARCHAR(20) PRIMARY KEY,
+name VARCHAR(10) NOT NULL,
+pass VARCHAR(100) NOT NULL,
+email VARCHAR(30) NOT NULL,
+mobile VARCHAR(13) NOT NULL,
+zipcode  VARCHAR(5) NOT NULL,
+address1  VARCHAR(80) NOT NULL,
+address2  VARCHAR(60) NOT NULL,
+email_get VARCHAR(1) NOT NULL,
+reg_date  TIMESTAMP NOT NULL,
+nickname VARCHAR(20) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SELECT * FROM member;
+INSERT INTO member VALUES('rlaxoals97', '김태민', '$2a$10$n6QovfeGX1u1EMXfVTGP3u8opMRfnJ4fVxjNReJkBcukOmZLjDTgq', 'rlaxoals97@naver.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', '1', '2024-11-04 18:26:08', 'Kyle');
+
+######## 상품 ########
 DROP TABLE IF EXISTS product;
 CREATE TABLE IF NOT EXISTS product(
 product_no INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -25,6 +45,7 @@ INSERT INTO product VALUES(3,'슬랙스','단정하 느낌을 주는 긴바지�
 
 SELECT * FROM product;
 
+######## 카테고리 ########
 DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS category (
     category_no INTEGER AUTO_INCREMENT PRIMARY KEY,

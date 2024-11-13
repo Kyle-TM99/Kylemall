@@ -1,69 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-   layout:decorate="~{layouts/main_layout}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/main_layout}">
 <th:block layout:fragment="content">
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Kyle mall에서 새로운 Style에 도전하세요!</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">항상 최신 패션 트랜드를 추구합니다!</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <!-- 하나의 상품 칸 -->
-                    <th:block th:each="product, status:${pList}">
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                        	<th:block th:if="${product.saleOk == '1'}">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            </th:block>
-                            <!-- Product image-->
-                      		<th:block th:unless="${product.imageUrl == null}">
-                            <img class="card-img-top" th:src="${product.imageUrl}" th:alt="${product.productName}" />
-                            </th:block>
-                            <th:block th:if="${product.imageUrl == null}">
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:alt="${product.productName}" />
-                            </th:block>
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">[[${product.productName}]]</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <th:block th:unless="${product.saleOk == '1'}">
-                                    <span>[[${product.productPrice}]]원</span>
-                                    </th:block>
-                                    <th:block th:if="${product.saleOk == '1'}">
-                                    <span class="text-muted text-decoration-line-through">[[${product.productPrice}]]원</span>
+	<!-- Header-->
+	<header class="bg-dark py-5">
+		<div class="container px-4 px-lg-5 my-5">
+			<div class="text-center text-white">
+				<h1 class="display-4 fw-bolder">Kyle mall에서 새로운 Style에 도전하세요!</h1>
+				<p class="lead fw-normal text-white-50 mb-0">항상 최신 패션 트랜드를
+					추구합니다!</p>
+			</div>
+		</div>
+	</header>
+	<!-- Section-->
+	<section class="py-5">
+		<div class="container px-4 px-lg-5 mt-5">
+			<div
+				class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+				<!-- 하나의 상품 칸 -->
+				<th:block th:if="${not #lists.isEmpty(pList)}">
+					<th:block th:each="product, status:${pList}">
+						<div class="col mb-5">
+							<div class="card h-100">
+								<th:block th:if="${product.saleOk == '1'}">
+									<!-- Sale badge-->
+									<div class="badge bg-dark text-white position-absolute"
+										style="top: 0.5rem; right: 0.5rem">Sale</div>
+								</th:block>
+								<!-- Product image-->
+								<th:block th:unless="${product.imageUrl == null}">
+									<img class="card-img-top" th:src="${product.imageUrl}"
+										th:alt="${product.productName}" />
+								</th:block>
+								<th:block th:if="${product.imageUrl == null}">
+									<img class="card-img-top"
+										src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+										th:alt="${product.productName}" />
+								</th:block>
+								<!-- Product details-->
+								<div class="card-body p-4">
+									<div class="text-center">
+										<!-- Product name-->
+										<h5 class="fw-bolder">[[${product.productName}]]</h5>
+										<!-- Product reviews-->
+										<div
+											class="d-flex justify-content-center small text-warning mb-2">
+											<div class="bi-star-fill"></div>
+											<div class="bi-star-fill"></div>
+											<div class="bi-star-fill"></div>
+											<div class="bi-star-fill"></div>
+											<div class="bi-star-fill"></div>
+										</div>
+										<!-- Product price-->
+										<th:block th:unless="${product.saleOk == '1'}">
+											<span>[[${product.productPrice}]]원</span>
+										</th:block>
+										<th:block th:if="${product.saleOk == '1'}">
+											<span class="text-muted text-decoration-line-through">[[${product.productPrice}]]원</span>
                                     [[${product.salePrice}]]원
                                     </th:block>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    </th:block>
-                    <!-- 하나의 상품 칸 -->
-                </div>
-            </div>
-        </section>
-    </body>
-    </th:block>
+									</div>
+								</div>
+								<!-- Product actions-->
+								<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+									<div class="text-center">
+										<a class="btn btn-outline-dark mt-auto" href="#">Add to
+											cart</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</th:block>
+				</th:block>
+				<th:block th:if="${#lists.isEmpty(pList)}">
+					<p>등록된 상품이 존재하지 않습니다.</p>
+				</th:block>
+				<!-- 하나의 상품 칸 -->
+			</div>
+		</div>
+	</section>
+</th:block>
 </html>

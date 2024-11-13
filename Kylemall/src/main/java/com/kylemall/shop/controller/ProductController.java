@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kylemall.shop.service.ProductService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class ProductController {
 	
@@ -20,7 +23,6 @@ public class ProductController {
 		
 		Map<String, Object> modelMap = productService.productList();
 		model.addAllAttributes(modelMap);
-		
 		return "views/mainList";
 		
 	}

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.kylemall.shop.domain.Product;
 import com.kylemall.shop.mapper.ProductMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ProductService {
 

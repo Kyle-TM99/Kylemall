@@ -27,7 +27,5 @@
 	p.created_at DESC
 </select>
 
-<!-- 전 -->
-
 
 </mapper>	

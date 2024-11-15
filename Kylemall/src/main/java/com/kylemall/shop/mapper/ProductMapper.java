@@ -12,4 +12,7 @@ public interface ProductMapper {
 	// 상품 리스트를 가져오는 메서드
 	List<Product> productList();
 	
+	// 하나의 상품 정보를 가져오는 메서드
+	Product getProduct(int no);
+	
 }

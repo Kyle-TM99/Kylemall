@@ -21,7 +21,7 @@ public class Product {
 	private String imageUrl;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
-	private Integer categoryNo;
+	private String categoryName;
 	private String saleOk;
 	private Integer salePrice;
 	

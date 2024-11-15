@@ -29,4 +29,10 @@ public class ProductService {
 		return resultMap;
 	}
 	
+	public Product getProduct(int no) {
+		
+		return productMapper.getProduct(no);
+		
+	}
+	
 }

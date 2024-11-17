@@ -27,6 +27,11 @@ public class MemberController {
 	// 회원 관련 Business 로직을 담당하는 객체를 의존성 주입하도록 설정
 	@Autowired
 	private MemberService memberService;
+	
+	@GetMapping("/joinChoice")
+	public String joinChoice(Model model) {
+		return "member/joinChoice";
+	}
 	 
 	@PostMapping("/login")	
 	public String login(Model model, @RequestParam("userId") String id, 

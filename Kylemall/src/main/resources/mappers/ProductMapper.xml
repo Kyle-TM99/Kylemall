@@ -28,7 +28,7 @@
 </select>
 
 <!-- 전체 상품 리스트를 가져오는 맵핑 구문 -->
-<select id="productList" resultType="Product">
+<select id="productList" parameterType="map" resultType="Product">
 	SELECT
 	p.product_no, p.product_name, p.product_description, p.product_price, p.stock_quantity,
 	p.image_url, p.created_at, p.updated_at, c.category_name, p.sale_ok, p.sale_price
@@ -36,9 +36,39 @@
 	product AS p
 	JOIN
 	category AS c ON p.category_no = c.category_no
+	<where>
+		<trim prefixOverrides="AND">
+			<if test="category != 0">
+				c.category_no = #{category}
+			</if>
+			<if test="type == 'title'">
+				AND p.product_name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</where>
 	ORDER BY
 	p.created_at DESC
+	LIMIT #{startRow}, #{num}
 </select>
 
+<!-- 전체 상품 리스트의 수를 가져오는 맵핑 구문 -->
+<select id="productCount" parameterType="map" resultType="int">
+	SELECT
+	COUNT(*)
+	FROM 
+	product AS p
+	JOIN
+	category AS c ON p.category_no = c.category_no
+	<where>
+		<trim prefixOverrides="AND">
+			<if test="category != 0">
+				c.category_no = #{category}
+			</if>
+			<if test="type == 'title'">
+				AND p.product_name LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</trim>
+	</where>
+</select>
 
 </mapper>	

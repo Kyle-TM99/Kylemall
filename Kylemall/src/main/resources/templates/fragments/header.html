@@ -35,16 +35,17 @@
 						class="nav-link dropdown-toggle" id="navbarDropdown" href="#"
 						role="button" data-bs-toggle="dropdown" aria-expanded="false">카테고리</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<li><a class="dropdown-item" href="#!">아우터</a></li>
+							<li><a class="dropdown-item" href="productList?category=1">아우터</a></li>
 							<li><hr class="dropdown-divider" /></li>
-							<li><a class="dropdown-item" href="#!">상의</a></li>
-							<li><a class="dropdown-item" href="#!">하의</a></li>
+							<li><a class="dropdown-item" href="productList?category=2">상의</a></li>
+							<li><a class="dropdown-item" href="productList?category=3">하의</a></li>
 						</ul></li>
 				</ul>
 				<!-- 회원일 경우 -->
 				<th:block th:if="${session.isLogin}">
 					<form class="d-flex">
-						<button class="btn btn-outline-dark" type="submit">
+						<button class="btn btn-outline-dark" type="submit" 
+						th:onclick="@{|location.href='productCart?id=${session.member.id}'|}">
 							<i class="bi-cart-fill me-1"></i> Cart <span
 								class="badge bg-dark text-white ms-1 rounded-pill">0</span>
 						</button>

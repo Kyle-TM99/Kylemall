@@ -1,5 +1,6 @@
 package com.kylemall.shop.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,23 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping({"/", "/mainList"})
-	public String productList(
-			Model model, @RequestParam("no") int no,
-			@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
-			@RequestParam(value = "type", defaultValue = "null") String type,
-			@RequestParam(value = "keyword", defaultValue = "null") String keyword,
-			@RequestParam(value = "category", defaultValue = "0") int category) {
+	@GetMapping("/productList")
+	public String productList(Model model,
+		@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
+		@RequestParam(value = "type", required = false, defaultValue = "null") String type,
+		@RequestParam(value = "keyword", required = false, defaultValue = "null") String keyword,
+		@RequestParam(value = "category", required = false, defaultValue = "0") int category) {
 		
-		Map<String, Object> modelMap = productService.productList();
+		Map<String, Object> modelMap = productService.productList(pageNum, type, keyword, category);
+		model.addAllAttributes(modelMap);
+		
+		return "views/productList";
+	}
+	
+	@GetMapping({"/", "/mainList"})
+	public String mainList(Model model) {
+		
+		Map<String, Object> modelMap = productService.mainList();
 		model.addAllAttributes(modelMap);
 		return "views/mainList";
 		
@@ -36,11 +45,27 @@ public class ProductController {
 	
 	@GetMapping("/productDetail")
 	public String getProduct(Model model,
-			@RequestParam("no") int no) {
+			@RequestParam("no") int no,
+			@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+			@RequestParam(value = "type", defaultValue = "null") String type,
+			@RequestParam(value = "keyword", defaultValue = "null") String keyword,
+			@RequestParam(value = "category", defaultValue = "0") int category) {
+		
+		boolean searchOption = (type.equals("null") || keyword.equals("null")) ? false : true;
 		
 		Product product = productService.getProduct(no);
+		List<Product> pList = productService.categoryList(category);
 		
 		model.addAttribute("product", product);
+		model.addAttribute("pList", pList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("category", category);
+		
+		if (searchOption) {
+			model.addAttribute("type", type);
+			model.addAttribute("keyword", keyword);
+		}
 		
 		return "views/productDetail";
 		

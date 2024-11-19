@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="row">
+			<div class="col m-3">
+				<table class="table">
+					<th:block th:if="${not #list.isEmpty(cList)}">
+						<tr th:each="product, status:${cList}">
+							<td>
+								<div class="row">
+									<div class="col ">
+										<span th:text="${board.memberId}" class="text-muted">아이디</span>
+									</div>
+									<div class="col text-end ">
+										<span class="text-end text-muted">[[${
+											#dates.format(board.boardRegDate, 'yyyy-MM-dd HH:mm')}]]</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col my-2">
+										<strong><a
+											class="fs-5 text-decoration-none fw-bold text-dark"
+											th:href="@{boardDetail(no=${board.boardNo}, 
+                           pageNum=${currentPage},category=${category},orderType=${orderType})}">[[${board.boardTitle}]]</a></strong>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col my-1">
+										<span class="badge bg-primary">[[${board.category}]]</span>
+									</div>
+									<div class="col text-end text-muted">
+										<i class="bi bi-eye">[[${board.boardView}]]</i> &nbsp; <i
+											class="bi bi-hand-thumbs-up">[[${board.boardLike}]]</i>
+										&nbsp; <i class="bi bi-hand-thumbs-down">[[${board.boardDislike}]]</i>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</th:block>
+					<th:block th:if="${#list.isEmpty(cList)}">
+						<tr>
+							<td>
+								<div class="row">
+									<div class="col">
+										<p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</th:block>
+				</table>
+			</div>
+		</div>
+	</div>
+</th:block>
+</html>

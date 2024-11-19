@@ -22,6 +22,22 @@ nickname VARCHAR(20) NOT NULL
 SELECT * FROM member;
 INSERT INTO member VALUES('rlaxoals97', '김태민', '$2a$10$n6QovfeGX1u1EMXfVTGP3u8opMRfnJ4fVxjNReJkBcukOmZLjDTgq', 'rlaxoals97@naver.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', '1', '2024-11-04 18:26:08', 'Kyle');
 
+######## 장바구니 ########
+DROP TABLE IF EXISTS shoppingcart;
+CREATE TABLE IF NOT EXISTS shoppingcart (
+    cart_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    quantity INTEGER NOT NULL,
+    added_at TIMESTAMP NOT NULL,
+    member_id VARCHAR(20) NOT NULL,
+    product_no INTEGER NOT NULL,
+    CONSTRAINT member_id_fk FOREIGN KEY (member_id) REFERENCES member(id),
+    CONSTRAINT product_no_fk FOREIGN KEY (product_no) REFERENCES product(product_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO category VALUES(1, '아우터');
+INSERT INTO category VALUES(2, '상의');
+INSERT INTO category VALUES(3, '하의'); 
+
 ######## 상품 ########
 DROP TABLE IF EXISTS product;
 CREATE TABLE IF NOT EXISTS product(
@@ -54,6 +70,8 @@ CREATE TABLE IF NOT EXISTS category (
 
 INSERT INTO category VALUES(1, '아우터');
 INSERT INTO category VALUES(2, '상의');
-INSERT INTO category VALUES(3, '하의');
+INSERT INTO category VALUES(3, '하의'); 
+
+
 
 SELECT * FROM category;

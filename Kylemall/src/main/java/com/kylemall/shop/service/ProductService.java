@@ -22,6 +22,26 @@ public class ProductService {
 	@Autowired
 	private ProductMapper productMapper;
 	
+	public List<Product> categoryList(int category) {
+		
+		List<Product> pList = productMapper.productList(0, 4, "null", "null", category);
+		
+		return pList;
+		
+	}
+	
+	public Map<String, Object> mainList() {
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		List<Product> mList = productMapper.productList(0, 10, "null", "null", 0);
+		
+		resultMap.put("mList", mList);
+		
+		return resultMap;
+		
+	}
+	
 	public Map<String, Object> productList(int pageNum, String type, String keyword, int category) {
 		
 		int currentPage = pageNum;

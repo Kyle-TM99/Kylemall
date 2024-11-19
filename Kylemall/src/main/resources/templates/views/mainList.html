@@ -19,8 +19,8 @@
 			<div
 				class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<!-- 하나의 상품 칸 -->
-				<th:block th:if="${not #lists.isEmpty(pList)}">
-					<th:block th:each="product, status:${pList}">
+				<th:block th:if="${not #lists.isEmpty(mList)}">
+					<th:block th:each="product, status:${mList}">
 						<div class="col mb-5">
 							<div class="card h-100">
 								<th:block th:if="${product.saleOk == '1'}">
@@ -65,14 +65,22 @@
 								<!-- Product actions-->
 								<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 									<div class="text-center">
-										<a class="btn btn-outline-dark mt-auto" th:href="@{productDetail(no=${product.productNo})}">상세 보기</a>
+										<th:block th:if="${product.categoryName} == '아우터'">
+											<a class="btn btn-outline-dark mt-auto" th:href="@{productDetail(no=${product.productNo},category=1)}">상세 보기</a>
+										</th:block>
+										<th:block th:if="${product.categoryName} == '상의'">
+											<a class="btn btn-outline-dark mt-auto" th:href="@{productDetail(no=${product.productNo},category=2)}">상세 보기</a>
+										</th:block>
+										<th:block th:if="${product.categoryName} == '하의'">
+											<a class="btn btn-outline-dark mt-auto" th:href="@{productDetail(no=${product.productNo},category=3)}">상세 보기</a>
+										</th:block>
 									</div>
 								</div>
 							</div>
 						</div>
 					</th:block>
 				</th:block>
-				<th:block th:if="${#lists.isEmpty(pList)}">
+				<th:block th:if="${#lists.isEmpty(mList)}">
 					<p>등록된 상품이 존재하지 않습니다.</p>
 				</th:block>
 				<!-- 하나의 상품 칸 -->

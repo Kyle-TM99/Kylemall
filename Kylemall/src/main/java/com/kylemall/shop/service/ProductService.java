@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 
-	private static final int PAGE_SIZE = 10;
+	private static final int PAGE_SIZE = 8;
 	private static final int PAGE_GROUP = 10;
 	
 	@Autowired
@@ -34,7 +34,7 @@ public class ProductService {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		
-		List<Product> mList = productMapper.productList(0, 10, "null", "null", 0);
+		List<Product> mList = productMapper.productList(0, 8, "null", "null", 0);
 		
 		resultMap.put("mList", mList);
 		

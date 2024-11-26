@@ -9,6 +9,8 @@ import com.kylemall.shop.domain.ShoppingCart;
 @Mapper
 public interface ShoppingCartMapper {
 
+	int getCartCount(String memberId);
+	
 	List<ShoppingCart> getCartByMemberId(String memberId);
 	
 }

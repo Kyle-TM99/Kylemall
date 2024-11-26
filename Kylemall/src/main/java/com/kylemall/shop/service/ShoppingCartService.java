@@ -16,6 +16,10 @@ public class ShoppingCartService {
 	@Autowired
 	private ShoppingCartMapper shoppingCartMapper;
 	
+	public int getCartCount(String memberId) {
+		return shoppingCartMapper.getCartCount(memberId);
+	}
+	
 	public List<ShoppingCart> getCartItemsByMemberId(String memberId) {
 	    return shoppingCartMapper.getCartByMemberId(memberId);
 	}

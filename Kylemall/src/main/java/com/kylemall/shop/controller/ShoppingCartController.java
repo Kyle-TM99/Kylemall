@@ -1,5 +1,6 @@
 package com.kylemall.shop.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import com.kylemall.shop.domain.ShoppingCart;
 import com.kylemall.shop.service.ShoppingCartService;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@Slf4j
 public class ShoppingCartController {
 	
 	@Autowired
@@ -23,11 +26,18 @@ public class ShoppingCartController {
 	public String getCartItems(HttpSession session, Model model) {
 	    Member member = (Member) session.getAttribute("member");
 	    if (member == null) {
-	        // 로그인되지 않은 사용자 처리
-	        return "redirect:/login";
+	        log.warn("Unauthenticated access to shopping cart");
+	        return "redirect:/loginForm";
 	    }
+
 	    List<ShoppingCart> cart = shoppingCartService.getCartItemsByMemberId(member.getId());
+	    log.info("Retrieved cart items: {}", cart);
+	    
+	    if (cart == null) {
+	        cart = new ArrayList<>();
+	    }
 	    model.addAttribute("sCart", cart);
 	    return "views/productCart";
 	}
+	
 }

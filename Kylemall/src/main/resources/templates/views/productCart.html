@@ -7,48 +7,107 @@
 		<div class="row">
 			<div class="col m-3">
 				<table class="table">
-					<th:block th:if="${not #list.isEmpty(sCart)}">
-						<tr th:each="product, status:${sCart}">
+					<tr>
+						<td class="text-center py-3" colspan="2">
+							<h2>장바구니</h2>
+						</td>
+					</tr>
+					<th:block th:if="${sCart != null and not #lists.isEmpty(sCart)}">
+						<tr th:each="product : ${sCart}">
 							<td>
-								<div class="row">
-									<div class="col ">
-										<span th:text="${product.memberId}" class="text-muted">아이디</span>
+								<div class="d-flex align-items-center position-relative">
+									<!-- Remove button -->
+									<div class="row top-0 end-0 m-2">
+										<div class="col">
+											<form
+												th:action="@{/cart/remove(productNo=${product.productNo})}"
+												method="post">
+												<button type="submit" class="btn btn-danger btn-sm">제거</button>
+											</form>
+										</div>
 									</div>
-									<div class="col text-end ">
-										<span class="text-end text-muted">[[${
-											#dates.format(product.addedAt, 'yyyy-MM-dd HH:mm')}]]</span>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col my-2">
-										<strong><a
-											class="fs-5 text-decoration-none fw-bold text-dark"
-											th:href="@{productDetail(no=${product.productNo}}">[[${product.productName}]]</a></strong>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col my-1">
-										<span class="badge bg-primary">[[${product.productNo}]]</span>
-									</div>
-									<div class="col text-end text-muted">
-										<i class="bi bi-eye">[[${product.productPrice}]]</i>
+
+									<!-- Product image -->
+									<th:block th:unless="${product.imageUrl == null}">
+										<img class="card-img-top" th:src="${product.imageUrl}"
+											th:alt="${product.productName}"
+											style="width: 22%; height: auto; margin-right: 20px;" />
+									</th:block>
+									<th:block th:if="${product.imageUrl == null}">
+										<img class="card-img-top"
+											src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+											th:alt="${product.productName}"
+											style="width: 24.5%; height: auto; margin-right: 20px;" />
+									</th:block>
+
+									<!-- Product details -->
+									<div style="flex-grow: 1;">
+										<div class="row">
+											<div class="col">
+												<span class="badge bg-primary">상품 번호 :
+													[[${product.productNo}]]</span>
+											</div>
+											<div class="col text-end">
+												<span class="text-muted" style="font-size: 0.9rem;">장바구니
+													추가 : [[${#dates.format(product.addedAt, 'yyyy-MM-dd
+													HH:mm')}]]</span>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col my-2">
+												<strong><a
+													class="fs-5 text-decoration-none fw-bold text-dark"
+													th:href="@{/productDetail(no=${product.productNo})}">[[${product.productName}]]</a></strong>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col text-end text-muted">
+												<th:block th:if="${product.saleOk == '1'}">
+													<div class="badge bg-dark text-white"
+														style="top: 0.5rem; right: 0.5rem">Sale</div>
+													<div class="product-price" data-sale="true"
+														th:data-price="${product.salePrice}">가격 :
+														[[${product.salePrice}]]원</div>
+												</th:block>
+												<th:block th:if="${product.saleOk == '0'}">
+													<span class="product-price" data-sale="false"
+														th:data-price="${product.productPrice}">가격 :
+														[[${product.productPrice}]]원</span>
+												</th:block>
+											</div>
+										</div>
+
+										<!-- Quantity input field -->
+										<div class="row my-2">
+											<div class="col">
+												<label for="quantity-[[${product.productNo}]]"
+													class="form-label">수량</label> <input type="number"
+													class="form-control" id="quantity-[[${product.productNo}]]"
+													name="quantity" value="1" min="1">
+											</div>
+										</div>
 									</div>
 								</div>
 							</td>
 						</tr>
+
 					</th:block>
-					<th:block th:if="${#list.isEmpty(sCart)}">
+					<th:block th:if="${sCart == null or #lists.isEmpty(sCart)}">
 						<tr>
 							<td>
-								<div class="row">
-									<div class="col">
-										<p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
-									</div>
-								</div>
+								<p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
 							</td>
 						</tr>
 					</th:block>
 				</table>
+				<div class="row">
+					<div class="col-9">
+						<p class="text-end">총 결제 금액 :</p>
+					</div>
+					<div class="col-3 text-end">
+						<span id="totalPrice" class="fs-5">가격</span>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

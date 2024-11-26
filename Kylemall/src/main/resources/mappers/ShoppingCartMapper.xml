@@ -29,6 +29,8 @@
 	        p.product_no,
 	        p.product_name, 
 	        p.product_price,
+	        p.sale_ok,
+	        p.sale_price,
 	        p.image_url
 	    FROM shoppingcart sc
 	    JOIN product p ON sc.product_no = p.product_no

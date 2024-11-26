@@ -20,6 +20,8 @@ public class ShoppingCart {
     private int productNo;        // 상품 번호
     private String productName;   // 상품 이름
     private int productPrice;     // 상품 가격
+    private String saleOk;		  // 할인 여부
+    private Integer salePrice;    // 할인 가격
     private String imageUrl;      // 상품 이미지 URL
 	
 }

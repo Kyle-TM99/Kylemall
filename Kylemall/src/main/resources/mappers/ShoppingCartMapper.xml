@@ -12,11 +12,18 @@
 -->
 <mapper namespace="com.kylemall.shop.mapper.ShoppingCartMapper">
 
+	<!-- 사용자의 장바구니에 상품을 추가하는 맵핑 구문 -->
+	<insert id="insertCart">
+	
+	INSERT INTO shoppingcart VALUES(1, #{cnt}, CURRENT_TIMESTAMP, #{memberId}, #{productNo});
+	
+	</insert>
+
 	<!-- 사용자의 장바구니의 상품 개수를 가져오는 맵핑 구문 -->
 	<select id="getCartCount">
 		SELECT COUNT(*)
 		FROM shoppingcart
-		WHERE member_id=${memberId}
+		WHERE member_id=#{memberId}
 	</select>
 	
 	<!-- 사용자의 장바구니의 상품들을 가져오는 맵핑 구문 -->

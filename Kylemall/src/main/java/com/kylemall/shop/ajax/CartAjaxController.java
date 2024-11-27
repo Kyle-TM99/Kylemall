@@ -16,13 +16,17 @@ public class CartAjaxController {
 	@Autowired
 	private ShoppingCartService shoppingCartService;
 	
-	@GetMapping("/cartCount.ajax")
+	@GetMapping("/addCart.ajax")
 	public Map<String, Integer> cartCountCheck(
-			@RequestParam("memberId") String id){
+			@RequestParam("cnt") int cnt,
+			@RequestParam("memberId") String id,
+			@RequestParam("productNo") int No){
 		
-		int cnt = shoppingCartService.getCartCount(id);
+		shoppingCartService.insertCart(cnt, id, No);
+		
+		int cartCnt = shoppingCartService.getCartCount(id);
 		Map<String, Integer> map = new HashMap<>();
-		map.put("cnt", cnt);
+		map.put("cnt", cartCnt);
 		
 		return map;
 	}

@@ -3,13 +3,16 @@ package com.kylemall.shop.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.kylemall.shop.domain.ShoppingCart;
 
 @Mapper
 public interface ShoppingCartMapper {
 
-	void insertCart(int cnt, String memberId, int productNo);
+	void deleteCart(int cartId);
+	
+	void insertCart(@Param("count") int count, @Param("memberId") String memberId, @Param("productNo") int productNo);
 	
 	int getCartCount(String memberId);
 	

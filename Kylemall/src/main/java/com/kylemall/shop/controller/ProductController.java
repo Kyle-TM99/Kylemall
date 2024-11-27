@@ -36,11 +36,9 @@ public class ProductController {
 	
 	@GetMapping({"/", "/mainList"})
 	public String mainList(Model model) {
-		
 		Map<String, Object> modelMap = productService.mainList();
 		model.addAllAttributes(modelMap);
 		return "views/mainList";
-		
 	}
 	
 	@GetMapping("/productDetail")
@@ -52,7 +50,6 @@ public class ProductController {
 			@RequestParam(value = "category", defaultValue = "0") int category) {
 		
 		boolean searchOption = (type.equals("null") || keyword.equals("null")) ? false : true;
-		
 		Product product = productService.getProduct(no);
 		List<Product> pList = productService.categoryList(category);
 		
@@ -66,9 +63,7 @@ public class ProductController {
 			model.addAttribute("type", type);
 			model.addAttribute("keyword", keyword);
 		}
-		
 		return "views/productDetail";
-		
 	}
 	
 }

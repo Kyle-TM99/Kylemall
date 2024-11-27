@@ -16,8 +16,12 @@ public class ShoppingCartService {
 	@Autowired
 	private ShoppingCartMapper shoppingCartMapper;
 	
-	public void insertCart(int cnt, String memberId, int productNo) {
-		shoppingCartMapper.insertCart(cnt, memberId, productNo);
+	public void deleteCart(int cartId) {
+		shoppingCartMapper.deleteCart(cartId);
+	}
+	
+	public void insertCart(int count, String memberId, int productNo) {
+		shoppingCartMapper.insertCart(count, memberId, productNo);
 	}
 	
 	public int getCartCount(String memberId) {

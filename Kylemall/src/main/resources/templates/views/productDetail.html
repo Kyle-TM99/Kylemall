@@ -24,8 +24,10 @@
                         </th:block>
                         <p class="lead mb-3">[[${product.productDescription}]]</p>
                         <div class="d-flex">
+							<input type="hidden" id="memberId" th:value="${session.member.id}" />
+							<input type="hidden" id="productNo" th:value="${product.productNo}" />
                             <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                            <button class="btn btn-outline-dark flex-shrink-0" id="shoppingCart" type="button">
+                            <button class="btn btn-outline-dark flex-shrink-0" id="addShoppingCart" type="button">
                                 <i class="bi-cart-fill me-1"></i>
                                 장바구니 담기
                             </button>

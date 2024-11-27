@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layouts/main_layout}">
 <th:block layout:fragment="content">
 	<div class="container px-4 px-lg-5 my-5">
@@ -19,11 +18,9 @@
 									<!-- Remove button -->
 									<div class="row top-0 end-0 m-2">
 										<div class="col">
-											<form
-												th:action="@{/cart/remove(productNo=${product.productNo})}"
-												method="post">
-												<button type="submit" class="btn btn-danger btn-sm">제거</button>
-											</form>
+											<input type="hidden" id="cartId" th:value="${product.cartId}" />
+											<button id="deleteCart" type="button" class="btn btn-danger btn-sm"><i
+													class="bi bi-x"></i></button>
 										</div>
 									</div>
 
@@ -34,8 +31,7 @@
 											style="width: 22%; height: auto; margin-right: 20px;" />
 									</th:block>
 									<th:block th:if="${product.imageUrl == null}">
-										<img class="card-img-top"
-											src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+										<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
 											th:alt="${product.productName}"
 											style="width: 24.5%; height: auto; margin-right: 20px;" />
 									</th:block>
@@ -55,9 +51,8 @@
 										</div>
 										<div class="row">
 											<div class="col my-2">
-												<strong><a
-													class="fs-5 text-decoration-none fw-bold text-dark"
-													th:href="@{/productDetail(no=${product.productNo})}">[[${product.productName}]]</a></strong>
+												<strong><a class="fs-5 text-decoration-none fw-bold text-dark"
+														th:href="@{/productDetail(no=${product.productNo})}">[[${product.productName}]]</a></strong>
 											</div>
 										</div>
 										<div class="row">
@@ -79,13 +74,16 @@
 
 										<!-- Quantity input field -->
 										<div class="row my-2">
-											<div class="col">
+											<div class="col text-end">
 												<label for="quantity-[[${product.productNo}]]"
-													class="form-label">수량</label> <input type="number"
-													class="form-control" id="quantity-[[${product.productNo}]]"
-													name="quantity" value="1" min="1">
+													class="form-label">수량</label>
+												<input type="number" class="form-control text-end"
+													id="quantity-[[${product.productNo}]]" name="quantity"
+													th:value="${product.quantity}" min="1"
+													style="max-width: 8rem; margin-left: auto; margin-right: 0;">
 											</div>
 										</div>
+
 									</div>
 								</div>
 							</td>
@@ -112,4 +110,5 @@
 		</div>
 	</div>
 </th:block>
+
 </html>

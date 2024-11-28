@@ -10,7 +10,7 @@ import com.kylemall.shop.domain.ShoppingCart;
 @Mapper
 public interface ShoppingCartMapper {
 
-	void deleteCart(int cartId);
+	void deleteCart(int no);
 	
 	void insertCart(@Param("count") int count, @Param("memberId") String memberId, @Param("productNo") int productNo);
 	

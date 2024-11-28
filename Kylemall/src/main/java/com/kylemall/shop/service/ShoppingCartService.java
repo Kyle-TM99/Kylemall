@@ -16,8 +16,8 @@ public class ShoppingCartService {
 	@Autowired
 	private ShoppingCartMapper shoppingCartMapper;
 	
-	public void deleteCart(int cartId) {
-		shoppingCartMapper.deleteCart(cartId);
+	public void deleteCart(int no) {
+		shoppingCartMapper.deleteCart(no);
 	}
 	
 	public void insertCart(int count, String memberId, int productNo) {

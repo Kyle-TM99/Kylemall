@@ -1,7 +1,6 @@
 package com.kylemall.shop.ajax;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kylemall.shop.domain.ShoppingCart;
+import com.kylemall.shop.domain.Member;
 import com.kylemall.shop.service.ShoppingCartService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class CartAjaxController {
@@ -19,9 +20,15 @@ public class CartAjaxController {
 	private ShoppingCartService shoppingCartService;
 	
 	@PostMapping("/deleteCart.ajax")
-	public List<ShoppingCart> deleteCart{
+	public Map<String, Object> deleteCart(
+			HttpSession session, @RequestParam("no") int no){
+		shoppingCartService.deleteCart(no);
 		
-		List<ShoppingCart> cart = shoppingCartService.getCartItemsByMemberId(member.getId());
+		Map<String, Object> result = new HashMap<>();
+		Member member = (Member) session.getAttribute("member");
+		
+		result.put("cartList", shoppingCartService.getCartItemsByMemberId(member.getId()));
+		return result;
 	}
 	
 	@PostMapping("/addCart.ajax")

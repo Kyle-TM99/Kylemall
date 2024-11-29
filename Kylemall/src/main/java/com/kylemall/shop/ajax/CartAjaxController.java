@@ -19,6 +19,14 @@ public class CartAjaxController {
 	@Autowired
 	private ShoppingCartService shoppingCartService;
 	
+	@PostMapping("/clearCart.ajax")
+	public void clearCart(
+			HttpSession session) {
+		Member member = (Member) session.getAttribute("member");
+		shoppingCartService.clearCart(member.getId());
+	}
+	
+	
 	@PostMapping("/deleteCart.ajax")
 	public Map<String, Object> deleteCart(
 			HttpSession session, @RequestParam("no") int no){

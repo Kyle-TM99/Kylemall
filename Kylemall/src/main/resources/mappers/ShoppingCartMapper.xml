@@ -12,6 +12,11 @@
 -->
 <mapper namespace="com.kylemall.shop.mapper.ShoppingCartMapper">
 
+	<!-- 사용자의 장바구니의 모든 상품을 제거하는 맵핑 구문 -->
+	<delete id="clearCart">
+        DELETE FROM cart WHERE member_id = #{memberId}
+    </delete>
+
 	<!-- 사용자의 장바구니에 상품을 제거하는 맵핑 구문 -->
 	<delete id="deleteCart">
 		DELETE FROM shoppingcart WHERE cart_id = #{no}

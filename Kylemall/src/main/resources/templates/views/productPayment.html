@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="content">
+	<div class="container my-5">
+	        <h1 class="text-center">주문/결제</h1>
+
+	        <!-- 주문 리스트 -->
+	        <section>
+	            <div class="section-title">주문 리스트</div>
+	            <table class="table">
+	                <thead>
+	                    <tr>
+	                        <th>상품명</th>
+	                        <th>수량</th>
+	                        <th>가격</th>
+	                        <th>할인</th>
+	                        <th>최종금액</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td>3D 시뮬레이션 모델 키트</td>
+	                        <td>1</td>
+	                        <td>6,000원</td>
+	                        <td>-3,000원</td>
+	                        <td>3,000원</td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </section>
+
+	        <!-- 주문상품 할인적용 -->
+	        <section>
+	            <div class="section-title">주문상품 할인적용</div>
+	            <table class="table price-summary">
+	                <thead>
+	                    <tr>
+	                        <th>상품금액</th>
+	                        <th>배송비</th>
+	                        <th>할인금액</th>
+	                        <th>추가금액</th>
+	                        <th>최종 결제금액</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td>6,000원</td>
+	                        <td>3,000원</td>
+	                        <td>-3,000원</td>
+	                        <td>0원</td>
+	                        <td class="text-danger">6,000원</td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	        </section>
+
+	        <!-- 결제 버튼 -->
+	        <div class="btn-container">
+	            <span class="final-price">6,000원</span>
+	            <div class="mt-3">
+	                <button class="btn btn-primary">주문하기</button>
+	                <button class="btn btn-secondary">주문취소</button>
+	            </div>
+	        </div>
+	    </div>
+		
+</th:block>
+
+</html>

@@ -5,17 +5,14 @@
 	<div class="container d-flex justify-content-center align-items-center vh-80">
 		<div class="card p-4" style="width: 350px;">
 			<div class="d-flex justify-content-center mb-2">
-				<!-- <img src="images/OneTeamLogo.png" alt="원팀로고" style="width: 190px; height: 190px;">  -->
 			</div>
 			<h5 class="text-center fw-bold">
 				<p class="mb-2">L O G I N</p>
 			</h5>
 			<p class="text-center text-muted mt-4 mb-5">Korea No.1 Shoping Mall</p>
-			<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=YOUR_REST_API_KEY&redirect_uri=YOUR_REDIRECT_URI"
-			               class="btn btn-warning btn-block text-dark my-3">
-			                <img src="image/kakao_login_medium_wide.png" alt="카카오 로그인"
-			                     style="height: 20px; margin-right: 8px;">
-			            </a>
+			<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=YOUR_REST_API_KEY&redirect_uri=YOUR_REDIRECT_URI" class="my-3">
+			                <img src="images/kakao_login_medium_wide.png" alt="카카오 로그인">
+			</a>
 			<form id="loginForm" action="login" method="post">
 				<div class="form-floating mb-3">
 					<input type="text" class="form-control" id="userId" name="userId" placeholder="아이디" required>

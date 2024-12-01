@@ -8,11 +8,36 @@ $(document).ready(function() {
 	updateTotalPrice();
 	
 	// 장바구니 비우기 클릭 시 이벤트 핸들러
-	$(document).on("click", "#clearCart", function (){
-		
-		
-		
-	})
+	$(document).on("click", "#clearCart", function () {
+	    $.ajax({
+	        url: "clearCart.ajax",
+	        type: "POST",
+			dataType: "json",
+	        success: function (resData) {
+	            // 장바구니 목록 비우기
+	            $("#cartList").empty();
+
+	            let emptyMessage = `
+	                <tr>
+	                    <td class="text-center pt-5 pb-4">
+	                        <p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
+	                    </td>
+	                </tr>`;
+	            $("#cartList").append(emptyMessage);
+
+				// 가격 업데이트
+	            updateTotalPrice();
+				
+				// 헤더 장바구니 카운트 업데이트
+				$("#shoppingCartQuantity").text(resData.cnt);
+	        },
+	        error: function (xhr, status, error) {
+	            alert("장바구니 삭제에 실패했습니다.");
+	            console.error(error);
+	        }
+	    });
+	});
+
 	
 	// 장바구니 제거 클릭 시 이벤트 핸들러
 	$(document).on("click", "#deleteCart", function () {
@@ -110,6 +135,9 @@ $(document).ready(function() {
 
 	            // 총 가격 업데이트
 	            updateTotalPrice();
+				
+				// 헤더 장바구니 카운트 업데이트
+				$("#shoppingCartQuantity").text(resData.cnt);
 	        },
 	        error: function (xhr, status, error) {
 	            alert("장바구니 삭제에 실패했습니다.");
@@ -188,4 +216,6 @@ $(document).ready(function() {
 		// 총 결제 금액 반영
 		$("#totalPrice").text(`${totalPrice.toLocaleString()}원`);
 	}
+
 });
+

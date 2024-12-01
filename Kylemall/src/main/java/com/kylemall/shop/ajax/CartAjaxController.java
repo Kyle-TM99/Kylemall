@@ -20,10 +20,17 @@ public class CartAjaxController {
 	private ShoppingCartService shoppingCartService;
 	
 	@PostMapping("/clearCart.ajax")
-	public void clearCart(
+	public Map<String, Integer> clearCart(
 			HttpSession session) {
 		Member member = (Member) session.getAttribute("member");
 		shoppingCartService.clearCart(member.getId());
+		
+		Map<String, Integer> result = new HashMap<>();
+		int headerCount = shoppingCartService.getCartCount(member.getId());
+		
+		result.put("cnt", shoppingCartService.getCartCount(member.getId()));
+		return result;
+		
 	}
 	
 	
@@ -36,6 +43,7 @@ public class CartAjaxController {
 		Member member = (Member) session.getAttribute("member");
 		
 		result.put("cartList", shoppingCartService.getCartItemsByMemberId(member.getId()));
+		result.put("cnt", shoppingCartService.getCartCount(member.getId()));
 		return result;
 	}
 	

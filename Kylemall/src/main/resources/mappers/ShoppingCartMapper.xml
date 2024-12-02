@@ -12,6 +12,13 @@
 -->
 <mapper namespace="com.kylemall.shop.mapper.ShoppingCartMapper">
 
+	<!-- 방바구니 추가 시 동일 상품의 수량을 업데이하는 맵핑 구문 -->
+	<update id="updateCart" parameterType="ShoppingCart">
+        UPDATE shoppingcart
+        SET quantity = #{quantity}
+        WHERE member_id = #{memberId} AND product_no = #{productNo}
+    </update>
+
 	<!-- 사용자의 장바구니의 모든 상품을 제거하는 맵핑 구문 -->
 	<delete id="clearCart">
         DELETE FROM shoppingcart WHERE member_id = #{memberId}

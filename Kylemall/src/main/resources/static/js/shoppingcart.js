@@ -7,6 +7,16 @@ $(document).ready(function() {
 	// 초기 총 금액 계산
 	updateTotalPrice();
 	
+	$('#payCart').on('click', function (event) {
+	        // cartList의 제품 존재 여부 확인
+	        const cartList = $('#cartList tr');
+	        
+	        if (cartList.length === 0) { // 장바구니가 비어있을 때
+	            alert("장바구니에 상품이 없습니다. 상품을 추가해주세요.");
+	            event.preventDefault(); // 기본 동작(페이지 이동) 막기
+	        } 
+	    });
+	
 	// 장바구니 비우기 클릭 시 이벤트 핸들러
 	$(document).on("click", "#clearCart", function () {
 	    $.ajax({

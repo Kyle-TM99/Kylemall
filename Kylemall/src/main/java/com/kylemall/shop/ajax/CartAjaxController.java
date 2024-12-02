@@ -48,7 +48,7 @@ public class CartAjaxController {
 	}
 	
 	@PostMapping("/addCart.ajax")
-	public Map<String, Integer> cartCountCheck(
+	public Map<String, Integer> addCart(
 			@RequestParam("count") int count,
 			@RequestParam("memberId") String id,
 			@RequestParam("productNo") int No){

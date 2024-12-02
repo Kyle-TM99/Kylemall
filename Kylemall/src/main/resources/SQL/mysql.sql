@@ -56,6 +56,49 @@ CREATE TABLE IF NOT EXISTS shoppingcart (
     CONSTRAINT product_no_fk FOREIGN KEY (product_no) REFERENCES product(product_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+######## 주문 ########
+DROP TABLE IF EXISTS orders;
+CREATE TABLE IF NOT EXISTS orders (
+	order_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    member_id VARCHAR(50) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    order_status VARCHAR(10) DEFAULT '주문 완료',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT orders_member_id_fk FOREIGN KEY (member_id) REFERENCES member(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+######## 결제 ########
+CREATE TABLE IF NOT EXISTS payment (
+	payment_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    order_id INTEGER NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    payment_status VARCHAR(20) DEFAULT '결제 대기',
+    amount DECIMAL(10, 2) NOT NULL,
+    paid_at TIMESTAMP NULL, # 결제가 완료된 시점을 기록하는 필드
+    payment_gateway_id VARCHAR(100) NULL, # 결제 게이트웨이의 ID를 저장하는 필드
+    approval_number VARCHAR(50) NULL, # 결제 승인 번호를 저장하는 필드
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+######## 배송 정보 ########
+CREATE TABLE IF NOT EXISTS shipping (
+    shipping_id INTEGER AUTO_INCREMENT PRIMARY KEY, -- 배송 ID, 자동 증가
+    order_id INTEGER NOT NULL,                      -- 주문 ID (Foreign Key)
+    recipient_name VARCHAR(100) NOT NULL,      -- 수령인 이름
+    address VARCHAR(255) NOT NULL,              -- 배송 주소
+    phone_number VARCHAR(15) NOT NULL,          -- 수령인 전화번호
+    delivery_status ENUM('배송 준비 중', '배송 중', '배송 완료', '배송 취소') DEFAULT '배송 준비 중', -- 배송 상태
+    tracking_number VARCHAR(50),                 -- 운송장 번호
+    shipping_date DATETIME,                      -- 배송 시작일
+    estimated_arrival DATETIME,                  -- 예상 도착일
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성일
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정일
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) -- order_id는 orders 테이블의 외래 키
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 ######## 데이터 삽입 ########
 -- 회원
 INSERT INTO member VALUES('rlaxoals97', '김태민', '$2a$10$n6QovfeGX1u1EMXfVTGP3u8opMRfnJ4fVxjNReJkBcukOmZLjDTgq', 'rlaxoals97@naver.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', 1, '2024-11-04 18:26:08', 'Kyle');

@@ -43,7 +43,7 @@
 										</div>
 										<div class="row">
 											<div class="col my-2">
-												<strong><a class="fs-5 text-decoration-none fw-bold text-dark" th:href="@{/productDetail(no=${product.productNo})}">[[${product.productName}]]</a></strong>
+												<strong><span class="productName fs-5 fw-bold text-dark">[[${product.productName}]]</span></strong>
 											</div>
 										</div>
 										<div class="row">
@@ -82,49 +82,92 @@
 		</section>
 
 		<!-- 배송지 입력 및 결제 방식 적용 -->
-		<section>
-			<div class="section-title fs-5 text-center my-5">배송지 확인</div>
-			<table class="table">
-				<tbody>
-					<tr>
-						<th scope="row">
-							<div class="txt-l">이름</div>
-						</th>
-						<td colspan="3"><input type="text" name="deliveryName" form="order_form" id="deliveryName" value=""></td>
-					</tr>
-					<tr>
-						<th scope="row"><div class="txt-l">연락처</div></th>
-						<td><input type="text" name="payPhone1" form="order_form" id="payPhone1" size="4" maxlength="4"> - <input type="text" name="payPhone2" form="order_form" id="payPhone2" size="4" maxlength="4" class="MS_input_txt w60" value=""> - <input type="text" name="payPhone3" form="order_form" id="payPhone3" size="4" maxlength="4" minlength="4" class="MS_input_txt w60" value=""></td>
-						<th scope="row" style="border: 1px solid #eee"><div class="txt-c">비상 연락처</div></th>
-						<td style="padding-left: 10px"><input type="text" name="emergency1" form="order_form" id="emergency1" size="4" maxlength="4" class="MS_input_txt w60" value=""> - <input type="text" name="emergency2" form="order_form" id="emergency2" size="4" maxlength="4" class="MS_input_txt w60" value=""> - <input type="text" name="emergency3" form="order_form" id="emergency3" size="4" maxlength="4" minlength="4" class="MS_input_txt w60" value=""></td>
-					</tr>
-					<tr>
-						<th scope="row"><div class="txt-l">배송지</div></th>
-						<td colspan="3"><input name="payZipcode" id="payZipcode" form="order_form" size="6" class="MS_input_txt w60"> 
-						<input type="button" class="btn btn-outline-primary btn-sm" id="payBtnZipcode" value="우편번호 찾기">
-							<div class="mt-2">
-								<input type="text" name="payAddress1" form="order_form" id="payAddress1" size="50" class="MS_input_txt w240" readonly> 
-								<input type="hidden" name="old_payAddress" form="order_form" id="old_payAddress"> 
-								<input type="text" name="payAddress2" form="order_form" id="payAddress2" size="50" placeholder="(상세주소)">
-							</div></td>
-					</tr>
-					<tr>
-						<th scope="row">
-							<div class="txt-l">
-								주문메세지<br> <span>(100자내외)</span>
-							</div>
-						</th>
-						<td colspan="1"><textarea name="orderMessage" form="order_form" id="orderMessage" cols="50" rows="5"></textarea></td>
-						<th scope="row" style="border: 1px solid #eee">
-							<div class="txt-l">
-								배송메세지<br> <span>(100자내외)</span>
-							</div>
-						</th>
-						<td colspan="1"><textarea name="deliveryMessage" form="order_form" id="deliveryMessage" cols="50" rows="5"></textarea></td>
-					</tr>
-				</tbody>
-			</table>
-		</section>
+	<section>
+    <div class="section-title fs-5 text-center my-5">배송지 확인</div>
+    <div class="container">
+        <form id="order_form">
+            <div class="row mb-3 align-items-center">
+                <!-- 이름 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label for="deliveryName" class="form-label">이름</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <input type="text" name="deliveryName" id="deliveryName" class="form-control" placeholder="이름을 입력하세요">
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <!-- 연락처 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label class="form-label">연락처</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <div class="input-group">
+                        <input type="text" name="payPhone1" id="payPhone1" class="form-control" maxlength="4" placeholder="010">
+                        <span class="input-group-text">-</span>
+                        <input type="text" name="payPhone2" id="payPhone2" class="form-control" maxlength="4" placeholder="1234">
+                        <span class="input-group-text">-</span>
+                        <input type="text" name="payPhone3" id="payPhone3" class="form-control" maxlength="4" placeholder="5678">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <!-- 비상 연락처 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label class="form-label">비상 연락처</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <div class="input-group">
+                        <input type="text" name="emergency1" id="emergency1" class="form-control" maxlength="4" placeholder="010">
+                        <span class="input-group-text">-</span>
+                        <input type="text" name="emergency2" id="emergency2" class="form-control" maxlength="4" placeholder="1234">
+                        <span class="input-group-text">-</span>
+                        <input type="text" name="emergency3" id="emergency3" class="form-control" maxlength="4" placeholder="5678">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <!-- 배송지 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label class="form-label">배송지</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <div class="input-group mb-2">
+                        <input type="text" name="payZipcode" id="payZipcode" class="form-control" placeholder="우편번호">
+                        <button type="button" id="payBtnZipcode" class="btn btn-outline-primary">우편번호 찾기</button>
+                    </div>
+                    <input type="text" name="payAddress1" id="payAddress1" class="form-control mb-2" placeholder="기본 주소" readonly>
+                    <input type="text" name="payAddress2" id="payAddress2" class="form-control" placeholder="상세 주소">
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <!-- 주문메세지 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label for="orderMessage" class="form-label">주문메세지</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <textarea name="orderMessage" id="orderMessage" class="form-control" rows="3" placeholder="주문메세지를 입력하세요"></textarea>
+                </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+                <!-- 배송메세지 -->
+                <div class="col-12 col-md-3 text-md-center border-end">
+                    <label for="deliveryMessage" class="form-label">배송메세지</label>
+                </div>
+                <div class="col-12 col-md-9">
+                    <textarea name="deliveryMessage" id="deliveryMessage" class="form-control" rows="3" placeholder="배송메세지를 입력하세요"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+
 
 		<!-- 주문상품 할인적용 -->
 		<section>
@@ -167,25 +210,25 @@
 				            >
 	                            <li>
 	                                <div class="form-check">
-	                                    <input type="radio" class="form-check-input" name="radio_paymethod" id="creditCard" value="C" checked>
+	                                    <input form="order_form" type="radio" class="form-check-input" name="radio_paymethod" id="creditCard" value="C" checked>
 	                                    <label class="form-check-label" for="creditCard">신용카드</label>
 	                                </div>
 	                            </li>
 	                            <li>
 	                                <div class="form-check">
-	                                    <input type="radio" class="form-check-input" name="radio_paymethod" id="kakaoPay" value="K">
+	                                    <input form="order_form" type="radio" class="form-check-input" name="radio_paymethod" id="kakaoPay" value="K">
 	                                    <label class="form-check-label" for="kakaoPay">카카오페이</label>
 	                                </div>
 	                            </li>
 	                            <li>
 	                                <div class="form-check">
-	                                    <input type="radio" class="form-check-input" name="radio_paymethod" id="naverPay" value="N" disabled>
+	                                    <input form="order_form" type="radio" class="form-check-input" name="radio_paymethod" id="naverPay" value="N" disabled>
 	                                    <label class="form-check-label" for="naverPay">네이버페이</label>
 	                                </div>
 	                            </li>
 	                            <li>
 	                                <div class="form-check">
-	                                    <input type="radio" class="form-check-input" name="radio_paymethod" id="tossPay" value="T" disabled>
+	                                    <input form="order_form" type="radio" class="form-check-input" name="radio_paymethod" id="tossPay" value="T" disabled>
 	                                    <label class="form-check-label" for="tossPay">토스페이</label>
 	                                </div>
 	                            </li>
@@ -199,10 +242,10 @@
 		<!-- 결제 버튼 -->
 		<div class="btn-container">
 			<div class="text-end my-5">
-				최종 결제 금액 : <span class="text-end fs-5">[[${totalPrice}]]원</span>
+				최종 결제 금액 : <span id="totalLastPrice" class="text-end fs-5">[[${totalPrice}]]원</span>
 			</div>
 			<div class="mt-3 text-center">
-				<button class="btn btn-primary me-3">주문하기</button>
+				<button id="orderListPayment" class="btn btn-primary me-3">결제하기</button>
 				<button class="btn btn-secondary">주문취소</button>
 			</div>
 		</div>

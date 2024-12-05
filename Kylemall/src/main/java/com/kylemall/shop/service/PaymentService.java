@@ -27,29 +27,36 @@ public class PaymentService {
 
     public boolean verifyPayment(String impUid, String merchantUid, int expectedAmount) {
         try {
-            // PortOne API로 결제 정보 가져오기
             RestTemplate restTemplate = new RestTemplate();
             String paymentInfoUrl = PORTONE_API_URL + "/payments/" + impUid;
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", getAccessToken());
             HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            // API 호출
             ResponseEntity<String> response = restTemplate.exchange(paymentInfoUrl, HttpMethod.GET, entity, String.class);
+
+            // 응답 디버깅
+            System.out.println("Payment Info Response: " + response.getBody());
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode paymentInfo = mapper.readTree(response.getBody()).get("response");
 
-            // 응답 데이터 검증
             if (paymentInfo == null) return false;
 
             String retrievedMerchantUid = paymentInfo.get("merchant_uid").asText();
             int amount = paymentInfo.get("amount").asInt();
             String status = paymentInfo.get("status").asText();
 
-            // 조건 검증
-            if (!"paid".equals(status)) return false; // 결제 상태 확인
-            if (!merchantUid.equals(retrievedMerchantUid)) return false; // UID 확인
-            if (amount != expectedAmount) return false; // 금액 확인
-            if (checkIfMerchantUidExists(merchantUid)) return false; // 중복 결제 방지
+            // 조건 검증 디버깅
+            System.out.println("Retrieved Merchant UID: " + retrievedMerchantUid);
+            System.out.println("Expected Amount: " + expectedAmount + ", Actual Amount: " + amount);
+            System.out.println("Payment Status: " + status);
+
+            if (!"paid".equals(status)) return false;
+            if (!merchantUid.equals(retrievedMerchantUid)) return false;
+            if (amount != expectedAmount) return false;
+            if (checkIfMerchantUidExists(merchantUid)) return false;
 
             return true;
         } catch (Exception e) {
@@ -100,6 +107,5 @@ public class PaymentService {
     	return paymentMapper.orderCountCheck(impUid) > 0;
     	
     }
-    
     
 }

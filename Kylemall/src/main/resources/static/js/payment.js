@@ -47,10 +47,11 @@ $(document).ready(function() {
 					body: JSON.stringify({
 						impUid: rsp.imp_uid,
 						merchantUid: rsp.merchant_uid,
-						amount: totalPrice,
+						totalPrice: totalPrice,
 						paymentMethod: paymentMethod,
 						recipientName: deliveryName,
-						address: payAddress
+						address: payAddress,
+						phoneNumber: payPhone
 					})
 				})
 					.then(response => {

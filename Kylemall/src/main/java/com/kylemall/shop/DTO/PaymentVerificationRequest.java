@@ -10,4 +10,5 @@ public class PaymentVerificationRequest {
     private String paymentMethod;
     private String recipientName;
     private String address;
+    private String phoneNumber;
 }

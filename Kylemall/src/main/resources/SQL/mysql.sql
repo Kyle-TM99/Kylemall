@@ -49,7 +49,8 @@ SELECT * FROM product;
 DROP TABLE IF EXISTS shoppingcart;
 CREATE TABLE IF NOT EXISTS shoppingcart (
     cart_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    quantity INTEGER NOT NULL,added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    quantity INTEGER NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     member_id VARCHAR(20) NOT NULL,
     product_no INTEGER NOT NULL,
     CONSTRAINT member_id_fk FOREIGN KEY (member_id) REFERENCES member(id),
@@ -59,9 +60,9 @@ CREATE TABLE IF NOT EXISTS shoppingcart (
 ######## 주문 ########
 DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
-	order_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+   merchant_uid VARCHAR(50) PRIMARY KEY,
     member_id VARCHAR(50) NOT NULL,
-    total_amount DECIMAL(10, 2) NOT NULL,
+    total_amount INTEGER NOT NULL,
     order_status VARCHAR(10) DEFAULT '주문 완료',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -69,35 +70,39 @@ CREATE TABLE IF NOT EXISTS orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ######## 주문상세 ########
+DROP TABLE IF EXISTS orderdetail;
 CREATE TABLE IF NOT EXISTS orderdetail (
-	detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+   detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     detail_quantity INTEGER NOT NULL,
-    order_id INTEGER NOT NULL,
+    merchant_uid VARCHAR(50) NOT NULL,
     product_no INTEGER NOT NULL,
-    CONSTRAINT detail_order_fk FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    CONSTRAINT detail_merchant_uid_fk FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid),
     CONSTRAINT detail_product_fk FOREIGN KEY (product_no) REFERENCES product(product_no)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SELECT * FROM orderdetail;
 
 ######## 결제 ########
+DROP TABLE IF EXISTS payment;
 CREATE TABLE IF NOT EXISTS payment (
-	payment_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    order_id INTEGER NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    payment_status VARCHAR(20) DEFAULT '결제 대기',
-    amount DECIMAL(10, 2) NOT NULL,
-    paid_at TIMESTAMP NULL, # 결제가 완료된 시점을 기록하는 필드
-    payment_gateway_id VARCHAR(100) NULL, # 결제 게이트웨이의 ID를 저장하는 필드
-    approval_number VARCHAR(50) NULL, # 결제 승인 번호를 저장하는 필드
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders(order_id)
+    imp_uid VARCHAR(50) PRIMARY KEY,         -- 상점 고유 결제 ID (PortOne API에서 필수)
+    merchant_uid VARCHAR(50) NOT NULL,                    -- 연관된 주문 ID
+    payment_method VARCHAR(50) NOT NULL,         -- 결제 수단 (카드, 계좌이체 등)
+    payment_status ENUM('PENDING', 'PAID', 'CANCELLED', 'FAILED') DEFAULT 'PAID', -- 결제 상태
+    amount INTEGER NOT NULL,              -- 결제 금액
+    paid_at TIMESTAMP NULL,                      -- 결제 완료 시간
+    cancelled_at TIMESTAMP NULL,                 -- 결제 취소 시간
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 레코드 생성 시간
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 레코드 업데이트 시간
+    CONSTRAINT fk_order FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
 ######## 배송 정보 ########
+DROP TABLE IF EXISTS shipping;
 CREATE TABLE IF NOT EXISTS shipping (
     shipping_id INTEGER AUTO_INCREMENT PRIMARY KEY, -- 배송 ID, 자동 증가
-    order_id INTEGER NOT NULL,                      -- 주문 ID (Foreign Key)
+    merchant_uid VARCHAR(50) NOT NULL,                      -- 주문 ID (Foreign Key)
     recipient_name VARCHAR(100) NOT NULL,      -- 수령인 이름
     address VARCHAR(255) NOT NULL,              -- 배송 주소
     phone_number VARCHAR(15) NOT NULL,          -- 수령인 전화번호
@@ -107,7 +112,7 @@ CREATE TABLE IF NOT EXISTS shipping (
     estimated_arrival DATETIME,                  -- 예상 도착일
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성일
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정일
-    FOREIGN KEY (order_id) REFERENCES orders(order_id) -- order_id는 orders 테이블의 외래 키
+    FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) -- order_id는 orders 테이블의 외래 키
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ######## 데이터 삽입 ########

@@ -24,13 +24,13 @@
 	
 	<!-- 주문 정보를 저장하는 맵핑 구문 -->
 	<insert id="insertPayment" parameterType="Payment">
-		INSERT INTO payment(merchant_uid, order_id, payment_method, payment_status, amount, paid_at, cancelled_at) 
-		VALUES(#{merchantUid}, #{orderId}, #{paymentMethod}, #{paymentStatus}, #{amount}, #{paidAt}, #{cancelledAt});
+		INSERT INTO payment(imp_uid, merchant_uid, payment_method, amount, paid_at) 
+		VALUES(#{impUid}, #{merchantUid}, #{paymentMethod}, #{amount}, #{paidAt});
 	</insert>
 	
 	<!-- 배송 정보를 저장하는 맵핑 구문 -->
 	<insert id="insertShipping" parameterType="Shipping">
-		INSERT INTO shipping(order_id, recipient_name, address, phone_number, tracking_number, shipping_date, estimated_arrival) 
-		VALUES(#{orderId}, #{recipientName}, #{address}, #{phoneNumber}, #{trackingNumber}, #{shippingDate}, #{estimatedArrival});
+		INSERT INTO shipping(merchant_uid, recipient_name, address, phone_number) 
+		VALUES(#{merchantUid}, #{recipientName}, #{address}, #{phoneNumber});
 	</insert>
 </mapper>

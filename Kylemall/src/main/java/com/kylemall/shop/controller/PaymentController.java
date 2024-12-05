@@ -69,13 +69,12 @@ public class PaymentController {
             shipping.setMerchantUid(request.getMerchantUid());
             shipping.setRecipientName(request.getRecipientName());
             shipping.setAddress(request.getAddress());
-            shipping.setPhoneNumber(request);
-            shipping.setTrackingNumber(null);
+            shipping.setPhoneNumber(request.getPhoneNumber());
             
-            paymentService.insertShipping(null);
+            paymentService.insertShipping(shipping);
             
             // 장바구니 내역 삭제
-            
+            shoppingCartService.clearCart(member.getId());
             
             return ResponseEntity.ok("결제 검증 성공");
                       

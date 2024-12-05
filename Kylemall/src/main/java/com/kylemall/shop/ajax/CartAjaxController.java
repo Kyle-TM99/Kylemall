@@ -28,7 +28,7 @@ public class CartAjaxController {
 		Map<String, Integer> result = new HashMap<>();
 		int headerCount = shoppingCartService.getCartCount(member.getId());
 		
-		result.put("cnt", shoppingCartService.getCartCount(member.getId()));
+		result.put("cnt", headerCount);
 		return result;
 		
 	}

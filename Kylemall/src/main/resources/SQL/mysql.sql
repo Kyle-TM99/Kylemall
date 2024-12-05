@@ -68,6 +68,17 @@ CREATE TABLE IF NOT EXISTS orders (
     CONSTRAINT orders_member_id_fk FOREIGN KEY (member_id) REFERENCES member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+######## 주문상세 ########
+CREATE TABLE IF NOT EXISTS orderdetail (
+	detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    detail_quantity INTEGER NOT NULL,
+    order_id INTEGER NOT NULL,
+    product_no INTEGER NOT NULL,
+    CONSTRAINT detail_order_fk FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    CONSTRAINT detail_product_fk FOREIGN KEY (product_no) REFERENCES product(product_no)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SELECT * FROM orderdetail;
+
 ######## 결제 ########
 CREATE TABLE IF NOT EXISTS payment (
 	payment_id INTEGER AUTO_INCREMENT PRIMARY KEY,

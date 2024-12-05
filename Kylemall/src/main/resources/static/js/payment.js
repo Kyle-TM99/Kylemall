@@ -2,84 +2,75 @@ $(document).ready(function() {
 
 	$("#payBtnZipcode").click(payFindZipcode);
 
-	$('#orderListPayment').on('click', function(e) {
-		e.preventDefault(); // 기본 폼 제출 방지
+	document.getElementById('orderListPayment').addEventListener('click', function() {
+		const IMP = window.IMP; // PortOne 라이브러리 초기화
+		IMP.init('imp61718262'); // 가맹점 식별 코드 (PortOne 콘솔에서 확인)
 
-		// 결제 방법 가져오기
-		const paymentMethod = $('input[name="radio_paymethod"]:checked').val();
+		// 결제 데이터 설정
+		const totalPrice = parseInt(document.getElementById('totalLastPrice').textContent.replace(/[^\d]/g, ''), 10);
+		const deliveryName = document.getElementById('deliveryName').value;
+		const payPhone = document.getElementById('payPhone1').value + '-' + document.getElementById('payPhone2').value + '-' + document.getElementById('payPhone3').value;
+		const payAddress = document.getElementById('payAddress1').value + ' ' + document.getElementById('payAddress2').value;
+		const paymentMethod = document.querySelector('input[name="radio_paymethod"]:checked').value;
 
-		// 입력된 배송지 정보 가져오기
-		const orderData = {
-			deliveryName: $('#deliveryName').val(),
-			payPhone: $('#payPhone1').val() + '-' + $('#payPhone2').val() + '-' + $('#payPhone3').val(),
-			emergencyPhone: $('#emergency1').val() + '-' + $('#emergency2').val() + '-' + $('#emergency3').val(),
-			payZipcode: $('#payZipcode').val(),
-			payAddress1: $('#payAddress1').val(),
-			payAddress2: $('#payAddress2').val(),
-			orderMessage: $('#orderMessage').val(),
-			deliveryMessage: $('#deliveryMessage').val(),
-			paymentMethod: paymentMethod,
-			totalPrice: $('#totalLastPrice').text().replace('원', '').trim() // 금액에서 '원' 제거
-		};
+		const productNames = Array.from(document.querySelectorAll('#cartList tr .fs-5.fw-bold.text-dark')).map(el => el.innerText);
+		let productName = productNames[0];
+		const productCount = productNames.length;
 
-		if (paymentMethod === 'K') {
-			// 카카오페이 결제 호출
-			openKakaoPay(orderData);
-		} else {
-			// 신용카드 결제 처리
-			alert('신용카드 결제 진행');
-			processCreditCard(orderData);
+		if (productCount > 1) {
+			productName += " 외 " + (productCount - 1) + "개"; // 상품 개수는 현재 상품을 제외해야 하므로 (productCount - 1)
 		}
-	});
 
+		if (!deliveryName || !payPhone || !payAddress || totalPrice <= 0) {
+			alert('모든 정보를 입력하고 다시 시도하세요.');
+			return;
+		}
+
+		// 고유 주문 번호 생성
+		const merchantUid = 'order_' + new Date().getTime();
+
+		IMP.request_pay({
+			pg: paymentMethod,
+			pay_method: paymentMethod,
+			merchant_uid: merchantUid,
+			name: productName,
+			amount: totalPrice,
+			buyer_name: deliveryName,
+			buyer_tel: payPhone,
+			buyer_addr: payAddress,
+		}, function(rsp) {
+			if (rsp.success) {
+				// 결제 성공 시 서버로 데이터 전달
+				fetch('/api/payment/verify', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						impUid: rsp.imp_uid,
+						merchantUid: rsp.merchant_uid,
+						amount: totalPrice,
+						paymentMethod: paymentMethod,
+						recipientName: deliveryName,
+						address: payAddress
+					})
+				})
+					.then(response => {
+						if (response.ok) {
+							alert('결제가 성공적으로 완료되었습니다.');
+							location.href = '/views/orderComplete';
+						} else {
+							throw new Error('결제 검증 실패');
+						}
+					})
+					.catch(error => {
+						alert('결제 처리 중 오류가 발생했습니다: ' + error.message);
+					});
+			} else {
+				alert('결제에 실패했습니다: ' + rsp.error_msg);
+			}
+		});
+	});
 
 })
-
-// 카카오페이 결제 메서드
-function openKakaoPay(orderData) {
-	// 카카오페이 결제 처리 로직
-	alert('카카오페이 결제 창을 엽니다.');
-	// AJAX를 통해 서버에 결제 정보 전송
-	$.ajax({
-		url: '/kakaoPay', // 서버의 카카오페이 결제 처리 URL
-		type: 'POST',
-		data: JSON.stringify(orderData),
-		contentType: 'application/json',
-		success: function(response) {
-			// 결제 성공 후 데이터 저장 요청
-			saveOrderData(orderData);
-		},
-		error: function() {
-			alert('결제에 실패했습니다.');
-		}
-	});
-}
-
-// 신용카드 결제 메서드
-function processCreditCard(orderData) {
-	// 신용카드 결제 처리 로직
-	alert('신용카드 결제를 처리합니다.');
-	// 결제 성공 후 데이터 저장 요청
-	saveOrderData(orderData);
-}
-
-// 결제정보 저장 메서드 
-function saveOrderData(orderData) {
-	// 주문 데이터 저장 AJAX 요청
-	$.ajax({
-		url: '/saveOrder', // 주문 데이터 저장 URL
-		type: 'POST',
-		data: JSON.stringify(orderData),
-		contentType: 'application/json',
-		success: function(response) {
-			alert('주문이 성공적으로 완료되었습니다.');
-			// 주문 완료 후 페이지 이동 또는 업데이트
-		},
-		error: function() {
-			alert('주문 저장에 실패했습니다.');
-		}
-	});
-}
 
 function payFindZipcode() {
 	new daum.Postcode({

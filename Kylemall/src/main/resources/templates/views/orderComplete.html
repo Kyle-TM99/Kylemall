@@ -4,37 +4,73 @@
 <th:block layout:fragment="content">
 	
 <div class="container mt-5">
-    <div class="card p-4 shadow">
-        <h1 class="text-center text-success">주문이 완료되었습니다!</h1>
-        <p class="text-center">고객님의 주문이 성공적으로 접수되었습니다. 감사합니다!</p>
-        <hr>
-        <div class="order-details mt-3">
-            <h3>주문 상세 정보</h3>
-            <table class="table table-bordered mt-3">
-                <tbody>
-                    <tr>
-                        <th scope="row">주문 번호</th>
-                        <td id="order-id">2024123456</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">상품명</th>
-                        <td id="product-name">테스트 상품</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">결제 금액</th>
-                        <td id="product-price">10,000원</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">결제 수단</th>
-                        <td id="payment-method">카카오페이</td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- 주문 완료 메시지 -->
+    <div class="text-center mb-5">
+        <h1 class="text-success mb-3">주문이 완료되었습니다!</h1>
+        <p>고객님의 주문이 성공적으로 접수되었습니다. 감사합니다!</p>
+        <hr class="my-4">
+    </div>
+
+    <!-- 주문 상세 카드 -->
+    <div class="card mx-auto shadow-sm mb-4" style="max-width: 600px; border-radius: 15px;">
+        <div class="card-body">
+            <h4 class="card-title text-center mb-4">🛍️ 주문 상세 정보</h4>
+            
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">결제일</div>
+                <div class="col-8 ps-3" id="order-id">[[${order.createdAt}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">주문 번호</div>
+                <div class="col-8 ps-3" id="order-id">[[${order.merchantUid}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">상품명</div>
+                <div class="col-8 ps-3" id="product-name">[[${order.productTitle}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">결제 금액</div>
+                <div class="col-8 ps-3" id="product-price">[[${payment.amount}]]원</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">결제 수단</div>
+                <div class="col-8 ps-3" id="payment-method">[[${payment.paymentMethod}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">주문 요청 사항</div>
+                <div class="col-8 ps-3" id="payment-method">[[${order.orderMsg}]]</div>
+            </div>
         </div>
-        <div class="text-center mt-4">
-            <a href="/products" class="btn btn-primary">쇼핑 계속하기</a>
-            <a href="/orders" class="btn btn-secondary">주문 내역 보기</a>
+    </div>
+
+    <!-- 배송지 상세 카드 -->
+    <div class="card mx-auto shadow-sm mb-4" style="max-width: 600px; border-radius: 15px;">
+        <div class="card-body">
+            <h4 class="card-title text-center mb-4">📦 배송 정보</h4>
+            
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">받는 분</div>
+                <div class="col-8 ps-3" id="receiver-name">[[${shipping.recipientName}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">연락처</div>
+                <div class="col-8 ps-3" id="receiver-phone">[[${shipping.phoneNumber}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">주소</div>
+                <div class="col-8 ps-3" id="receiver-address">[[${shipping.address}]]</div>
+            </div>
+            <div class="row mb-3 align-items-center">
+                <div class="col-4 text-end font-weight-bold border-end">배송 요청 사항</div>
+                <div class="col-8 ps-3" id="delivery-request">[[${shipping.shippingMsg}]]</div>
+            </div>
         </div>
+    </div>
+
+    <!-- 버튼 섹션 -->
+    <div class="text-center mt-4">
+        <a href="/mainList" class="btn btn-primary me-3">쇼핑 계속 하기</a>
+        <a href="/ordersdetail" class="btn btn-secondary">주문 내역 보기</a>
     </div>
 </div>
 

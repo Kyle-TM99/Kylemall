@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kylemall.shop.domain.Order;
 import com.kylemall.shop.domain.Product;
+import com.kylemall.shop.service.PaymentService;
 import com.kylemall.shop.service.ProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,20 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private PaymentService paymentService;
+	
+	@GetMapping("/orderComplete")
+	public String orderComplete(Model model,
+			@RequestParam(value = "merchantUid", required = true) String merchantUid) {
+		
+		model.addAttribute("payment", paymentService.getPaymentList(merchantUid));
+		model.addAttribute("order", paymentService.getOrderList(merchantUid));
+		model.addAttribute("shipping", paymentService.getShippingList(merchantUid));
+		
+		return "views/orderComplete";
+	}
 	
 	@GetMapping("/productList")
 	public String productList(Model model,

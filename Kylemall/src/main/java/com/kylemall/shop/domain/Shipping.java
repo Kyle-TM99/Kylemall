@@ -22,6 +22,7 @@ public class Shipping {
     private String trackingNumber;        // 운송장 번호
     private Date shippingDate;            // 배송 시작일
     private Date estimatedArrival;        // 예상 도착일
+    private String shippingMsg;           // 배송 메세지
     private Date createdAt;               // 생성일
     private Date updatedAt;               // 수정일
 	

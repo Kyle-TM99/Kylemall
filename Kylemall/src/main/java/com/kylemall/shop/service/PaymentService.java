@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kylemall.shop.domain.Order;
 import com.kylemall.shop.domain.Payment;
 import com.kylemall.shop.domain.Shipping;
 import com.kylemall.shop.mapper.PaymentMapper;
@@ -24,7 +25,19 @@ public class PaymentService {
     private static final String PORTONE_API_URL = "https://api.iamport.kr";
     private static final String API_KEY = "5441763443418651";
     private static final String API_SECRET = "vxP1CkKUQo4bZAOwjWMj9ec5jpQeJc4VkeN5mUWApucbZMKdRPYxc70pi4wfd3Adfi9sLEqjJnv7afu0";
-
+    
+    public Payment getPaymentList(String merchantUid) {
+    	return paymentMapper.getPaymentList(merchantUid);
+    }
+    
+    public Shipping getShippingList(String merchantUid) {
+    	return paymentMapper.getShippingList(merchantUid);
+    }
+    
+    public Order getOrderList(String merchantUid) {
+    	return paymentMapper.getOrderList(merchantUid);
+    }
+    
     public boolean verifyPayment(String impUid, String merchantUid, int expectedAmount) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -65,8 +78,8 @@ public class PaymentService {
         }
     }
     
-    public void insertOrder(String merchantUid, String memberId, int totalAmount) {
-    	paymentMapper.insertOrder(merchantUid, memberId, totalAmount);
+    public void insertOrder(Order order) {
+    	paymentMapper.insertOrder(order);
     }
     
     public void insertOrderDetail(int detailQuantity, String merchantUid, int productNo) {

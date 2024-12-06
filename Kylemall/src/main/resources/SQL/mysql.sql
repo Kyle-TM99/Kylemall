@@ -60,14 +60,21 @@ CREATE TABLE IF NOT EXISTS shoppingcart (
 ######## 주문 ########
 DROP TABLE IF EXISTS orders;
 CREATE TABLE IF NOT EXISTS orders (
-   merchant_uid VARCHAR(50) PRIMARY KEY,
+    merchant_uid VARCHAR(50) PRIMARY KEY,
     member_id VARCHAR(50) NOT NULL,
     total_amount INTEGER NOT NULL,
     order_status VARCHAR(10) DEFAULT '주문 완료',
+    product_title VARCHAR(50) NOT NULL,
+    order_msg VARCHAR(300),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT orders_member_id_fk FOREIGN KEY (member_id) REFERENCES member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SELECT * FRom orders;
+
+SELECT *
+FROM orders
+WHERE merchant_uid = 'order_1733448618198';
 
 ######## 주문상세 ########
 DROP TABLE IF EXISTS orderdetail;
@@ -95,6 +102,7 @@ CREATE TABLE IF NOT EXISTS payment (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 레코드 업데이트 시간
     CONSTRAINT fk_order FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+SELECT * FROM payment;
 
 
 
@@ -110,10 +118,13 @@ CREATE TABLE IF NOT EXISTS shipping (
     tracking_number VARCHAR(50),                 -- 운송장 번호
     shipping_date DATETIME,                      -- 배송 시작일
     estimated_arrival DATETIME,                  -- 예상 도착일
+    shipping_msg VARCHAR(300),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성일
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정일
     FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) -- order_id는 orders 테이블의 외래 키
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+SELECT * FROM shipping;
 
 ######## 데이터 삽입 ########
 -- 회원
@@ -134,31 +145,40 @@ INSERT INTO product (product_name, product_description, product_price, stock_qua
 ('체크 셔츠', '스타일리시한 체크 패턴 셔츠입니다.', 30000, 25, NULL, CURRENT_TIMESTAMP, NULL, 2, 0, NULL),
 ('슬림핏 슬랙스', '직장인 필수템, 슬림핏 슬랙스.', 45000, 18, NULL, CURRENT_TIMESTAMP, NULL, 3, 1, 40000),
 ('기모 맨투맨', '기모 소재로 보온성을 높인 맨투맨입니다.', 28000, 40, NULL, CURRENT_TIMESTAMP, NULL, 2, 1, 25000),
-('울 코트', '세련된 디자인의 울 코트.', 85000, 8, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 80000),
+('울 코트', '세련된 디자인의 울 코트.', 85000, 8, 'kylemallproducts/ulcoat.jpg', CURRENT_TIMESTAMP, NULL, 1, 1, 80000),
 ('하프팬츠', '여름철 필수템 하프팬츠.', 20000, 50, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL),
-('패딩 조끼', '가볍고 따뜻한 패딩 조끼입니다.', 60000, 12, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 55000),
+('패딩 조끼', '가볍고 따뜻한 패딩 조끼입니다.', 60000, 12, 'kylemallproducts/padingjoggi.jpg', CURRENT_TIMESTAMP, NULL, 1, 1, 55000),
 ('헨리넥 티셔츠', '캐주얼한 스타일의 헨리넥 티셔츠.', 27000, 35, NULL, CURRENT_TIMESTAMP, NULL, 2, 0, NULL),
 ('와이드 팬츠', '편안함과 스타일을 동시에 제공하는 와이드 팬츠.', 42000, 20, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL),
-('경량 패딩', '가볍고 따뜻한 경량 패딩.', 75000, 15, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 70000),
+('경량 패딩', '가볍고 따뜻한 경량 패딩.', 75000, 15, 'kylemallproducts/gyungranpading.jpg', CURRENT_TIMESTAMP, NULL, 1, 1, 70000),
 ('프린트 반팔 티', '개성 있는 프린트 디자인 반팔 티.', 22000, 60, NULL, CURRENT_TIMESTAMP, NULL, 2, 0, NULL),
 ('트레이닝 팬츠', '운동하기 좋은 트레이닝 팬츠.', 32000, 25, NULL, CURRENT_TIMESTAMP, NULL, 3, 1, 30000),
 ('양털 집업', '양털 소재로 보온성을 극대화한 집업.', 50000, 10, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 45000),
 ('카라 티셔츠', '깔끔한 디자인의 카라 티셔츠.', 26000, 30, NULL, CURRENT_TIMESTAMP, NULL, 2, 1, 23000),
 ('린넨 팬츠', '시원하고 편안한 린넨 팬츠.', 35000, 40, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL),
-('후리스 자켓', '가벼운 후리스 소재 자켓입니다.', 48000, 12, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 45000),
+('후리스 자켓', '가벼운 후리스 소재 자켓입니다.', 48000, 12, 'kylemallproducts/hurisjaket.jpg', CURRENT_TIMESTAMP, NULL, 1, 1, 45000),
 ('스트라이프 티', '심플한 스트라이프 디자인 티셔츠.', 24000, 50, NULL, CURRENT_TIMESTAMP, NULL, 2, 0, NULL),
 ('카고 팬츠', '다용도 주머니가 특징인 카고 팬츠.', 37000, 18, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL),
 ('가죽 자켓', '고급스러운 가죽 소재의 자켓.', 130000, 5, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 125000),
 ('V넥 스웨터', '부드러운 V넥 디자인의 스웨터.', 27000, 28, NULL, CURRENT_TIMESTAMP, NULL, 2, 1, 25000),
 ('조거 팬츠', '활동성을 강조한 조거 팬츠.', 39000, 22, NULL, CURRENT_TIMESTAMP, NULL, 3, 1, 35000),
-('트렌치 코트', '클래식한 디자인의 트렌치 코트.', 95000, 6, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 90000),
+('트렌치 코트', '클래식한 디자인의 트렌치 코트.', 95000, 6, 'kylemallproducts/trenchcoat.jpg', CURRENT_TIMESTAMP, NULL, 1, 1, 90000),
 ('포켓 셔츠', '실용적인 포켓이 있는 셔츠.', 31000, 40, NULL, CURRENT_TIMESTAMP, NULL, 2, 0, NULL),
 ('밴딩 팬츠', '편안한 착용감을 제공하는 밴딩 팬츠.', 34000, 30, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL),
 ('다운 자켓', '보온성을 높인 다운 자켓.', 140000, 7, NULL, CURRENT_TIMESTAMP, NULL, 1, 1, 135000),
 ('스웨트 셔츠', '기본 디자인의 스웨트 셔츠.', 26000, 60, NULL, CURRENT_TIMESTAMP, NULL, 2, 1, 24000),
 ('배기 팬츠', '스타일리시한 배기 팬츠.', 38000, 24, NULL, CURRENT_TIMESTAMP, NULL, 3, 0, NULL);
 
+SELECT * FROM product;
 
+UPDATE product SET image_url = 'kylemallproducts/ulcoat.jpg' WHERE product_no = 8;
+UPDATE product SET image_url = 'kylemallproducts/padingjoggi.jpg' WHERE product_no = 10;
+UPDATE product SET image_url = 'kylemallproducts/gyungrangpading.jpg' WHERE product_no = 13;
+UPDATE product SET image_url = 'kylemallproducts/hurisjaket.jpg' WHERE product_no = 19;
+UPDATE product SET image_url = 'kylemallproducts/trenchcoat.jpg' WHERE product_no = 25;
+UPDATE product SET image_url = 'kylemallproducts/goatjipup.jpg' WHERE product_no = 16;
+UPDATE product SET image_url = 'kylemallproducts/gajukjaket.jpg' WHERE product_no = 22;
+UPDATE product SET image_url = 'kylemallproducts/downparka.jpg' WHERE product_no = 28;
 -- 장바구니
 INSERT INTO shoppingcart VALUES(1, 1, CURRENT_TIMESTAMP, 'rlaxoals97', 1);
 

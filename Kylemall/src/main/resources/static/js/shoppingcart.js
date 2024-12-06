@@ -1,26 +1,13 @@
 $(document).ready(function() {
-	// 수량 변경 시 이벤트 핸들러
-	$(document).on("input", "input[type='number']", function() {
-		updateTotalPrice();
-	});
-
+	
 	// 초기 총 금액 계산
 	updateTotalPrice();
 	
-	$('#payCart').on('click', function (event) {
-	        // cartList의 제품 존재 여부 확인
-	        const cartList = $('#cartList tr');
-	        
-	        if (cartList.length === 0) { // 장바구니가 비어있을 때
-	            alert("장바구니에 상품이 없습니다. 상품을 추가해주세요.");
-	            event.preventDefault(); // 기본 동작(페이지 이동) 막기
-	        } 
-	    });
-	
-	// 장바구니 비우기 클릭 시 이벤트 핸들러
-	$(document).on("click", "#clearCart", function () {
-	    $.ajax({
-	        url: "clearCart.ajax",
+	// 장바구니 내에서 수량 변경 시 이벤트 핸들러
+	$(document).on("input", "input[type='number']", function() {
+		
+		$.ajax({
+	        url: "changeQuantity.ajax",
 	        type: "POST",
 			dataType: "json",
 	        success: function (resData) {
@@ -46,6 +33,56 @@ $(document).ready(function() {
 	            console.error(error);
 	        }
 	    });
+		
+		updateTotalPrice();
+	});
+
+	
+	$('#payCart').on('click', function (event) {
+	        // cartList의 제품 존재 여부 확인
+	        const cartList = $('#cartList tr');
+	        
+	        if (cartList.length === 0) { // 장바구니가 비어있을 때
+	            alert("장바구니에 상품이 없습니다. 상품을 추가해주세요.");
+	            event.preventDefault(); // 기본 동작(페이지 이동) 막기
+	        } 
+	    });
+	
+	// 장바구니 비우기 클릭 시 이벤트 핸들러
+	$(document).on("click", "#clearCart", function () {
+		const userResponse = confirm("장바구니를 비우시겠습니까?");
+		
+		if (userResponse) {
+		    $.ajax({
+		        url: "clearCart.ajax",
+		        type: "POST",
+				dataType: "json",
+		        success: function (resData) {
+		            // 장바구니 목록 비우기
+		            $("#cartList").empty();
+	
+		            let emptyMessage = `
+		                <tr>
+		                    <td class="text-center pt-5 pb-4">
+		                        <p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
+		                    </td>
+		                </tr>`;
+		            $("#cartList").append(emptyMessage);
+	
+					// 가격 업데이트
+		            updateTotalPrice();
+					
+					// 헤더 장바구니 카운트 업데이트
+					$("#shoppingCartQuantity").text(resData.cnt);
+		        },
+		        error: function (xhr, status, error) {
+		            alert("장바구니 삭제에 실패했습니다.");
+		            console.error(error);
+		        }
+		    });
+		} else {
+			return false;
+		}
 	});
 
 	

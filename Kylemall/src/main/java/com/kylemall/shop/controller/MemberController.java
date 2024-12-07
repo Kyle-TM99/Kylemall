@@ -2,6 +2,7 @@ package com.kylemall.shop.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.kylemall.shop.domain.Member;
+import com.kylemall.shop.domain.OrderSummary;
 import com.kylemall.shop.service.MemberService;
+import com.kylemall.shop.service.PaymentService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +30,24 @@ public class MemberController {
 	// 회원 관련 Business 로직을 담당하는 객체를 의존성 주입하도록 설정
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private PaymentService paymentService;
+	
+	@GetMapping("/myPage")
+	public String myPage(Model model, HttpSession session) {
+		
+		Member member = (Member) session.getAttribute("member");
+		
+		List<OrderSummary> osList = paymentService.getAllOrderSummary(member.getId());
+		
+		
+		model.addAttribute(member);
+		model.addAttribute("totalSpent" ,paymentService.memberTotalSpent(member.getId()));
+		model.addAttribute("orderSummary", paymentService.getAllOrderSummary(member.getId()));
+		
+		return "member/myPage";
+	}
 	
 	@GetMapping("/joinChoice")
 	public String joinChoice(Model model) {

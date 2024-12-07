@@ -3,6 +3,39 @@
 
 <mapper namespace="com.kylemall.shop.mapper.PaymentMapper">
 	
+	<!-- 사용자의 주문에 해당하는 상세 주문 정보를 가져오는 맵핑 구문 -->
+	<select id="getOrderDetail" resultType="OrderDetail">
+		SELECT
+			*
+		FROM
+			orderdetail od
+		INNER JOIN
+			product p ON od.product_no = p.product_no
+		WHERE
+			od.merchant_uid = #{merchantUid}
+	</select>
+	
+	<!-- 사용자의 주문, 배송 정보를 가져오는 맵핑 구문-->
+	<select id="getAllOrderSummary" resultType="OrderSummary">
+		SELECT 
+			* 
+		FROM 
+			orders o
+		INNER JOIN
+			payment p ON o.merchant_uid = p.merchant_uid
+		INNER JOIN
+			shipping s ON o.merchant_uid = s.merchant_uid
+		WHERE
+			o.member_id = #{memberId};
+	</select>
+	
+	<!-- 사용자가 구입한 상품 총 합계 맵핑 구문-->
+	<select id="memberTotalSpent">
+		SELECT SUM(total_amount)
+		FROM orders
+		WHERE member_id = #{memberId};
+	</select>
+	
 	<!-- 주문한 상품의 결제 정보를 가져오는 맵핑 구문 -->
 	<select id="getPaymentList" resultType="Payment">
 		SELECT *

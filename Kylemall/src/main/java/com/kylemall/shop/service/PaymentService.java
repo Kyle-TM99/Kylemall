@@ -1,5 +1,7 @@
 package com.kylemall.shop.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kylemall.shop.domain.Order;
+import com.kylemall.shop.domain.OrderDetail;
+import com.kylemall.shop.domain.OrderSummary;
 import com.kylemall.shop.domain.Payment;
 import com.kylemall.shop.domain.Shipping;
 import com.kylemall.shop.mapper.PaymentMapper;
@@ -25,6 +29,19 @@ public class PaymentService {
     private static final String PORTONE_API_URL = "https://api.iamport.kr";
     private static final String API_KEY = "5441763443418651";
     private static final String API_SECRET = "vxP1CkKUQo4bZAOwjWMj9ec5jpQeJc4VkeN5mUWApucbZMKdRPYxc70pi4wfd3Adfi9sLEqjJnv7afu0";
+    
+    List<OrderDetail> getOrderDetail(String merchantUid){
+    	return paymentMapper.getOrderDetail(merchantUid);
+    }
+    
+    public List<OrderSummary> getAllOrderSummary(String memberId){
+    	return paymentMapper.getAllOrderSummary(memberId);
+    }
+    
+    public Integer memberTotalSpent(String memberId) {
+    	Integer totalSpent =  paymentMapper.memberTotalSpent(memberId);
+    	return totalSpent != null ? totalSpent : 0;
+    }
     
     public Payment getPaymentList(String merchantUid) {
     	return paymentMapper.getPaymentList(merchantUid);

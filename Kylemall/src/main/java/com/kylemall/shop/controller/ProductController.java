@@ -52,7 +52,7 @@ public class ProductController {
 	
 	@GetMapping({"/", "/mainList"})
 	public String mainList(Model model) {
-		Map<String, Object> modelMap = productService.mainList();
+		Map<String, Object> modelMap = productService.newMainList();
 		model.addAllAttributes(modelMap);
 		return "views/mainList";
 	}

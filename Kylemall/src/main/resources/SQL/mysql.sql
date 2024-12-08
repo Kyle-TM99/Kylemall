@@ -79,7 +79,7 @@ WHERE merchant_uid = 'order_1733448618198';
 ######## 주문상세 ########
 DROP TABLE IF EXISTS orderdetail;
 CREATE TABLE IF NOT EXISTS orderdetail (
-   detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    detail_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     detail_quantity INTEGER NOT NULL,
     merchant_uid VARCHAR(50) NOT NULL,
     product_no INTEGER NOT NULL,
@@ -125,6 +125,49 @@ CREATE TABLE IF NOT EXISTS shipping (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SELECT * FROM shipping;
+
+####### 멤버 제약 조건 casecade 추가 ########
+
+ALTER TABLE shoppingcart 
+DROP FOREIGN KEY member_id_fk;
+
+ALTER TABLE shoppingcart 
+ADD CONSTRAINT member_id_fk 
+FOREIGN KEY (member_id) REFERENCES member(id) 
+ON DELETE CASCADE;
+
+ALTER TABLE orders 
+DROP FOREIGN KEY orders_member_id_fk;
+
+ALTER TABLE orders 
+ADD CONSTRAINT orders_member_id_fk 
+FOREIGN KEY (member_id) REFERENCES member(id) 
+ON DELETE CASCADE;
+
+ALTER TABLE orderdetail 
+DROP FOREIGN KEY detail_merchant_uid_fk;
+
+ALTER TABLE orderdetail 
+ADD CONSTRAINT detail_merchant_uid_fk 
+FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) 
+ON DELETE CASCADE;
+
+ALTER TABLE payment 
+DROP FOREIGN KEY fk_order;
+
+ALTER TABLE payment 
+ADD CONSTRAINT fk_order 
+FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) 
+ON DELETE CASCADE;
+
+ALTER TABLE shipping 
+DROP FOREIGN KEY shipping_ibfk_1;
+
+ALTER TABLE shipping 
+ADD CONSTRAINT shipping_ibfk_1 
+FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) 
+ON DELETE CASCADE;
+
 
 ######## 데이터 삽입 ########
 -- 회원
@@ -193,3 +236,16 @@ SELECT
         p.image_url AS imageUrl            
     FROM shoppingcart sc
     JOIN product p ON sc.product_no = p.product_no;
+    
+SELECT 
+	* 
+FROM 
+	orders o
+INNER JOIN
+	payment p ON o.merchant_uid = p.merchant_uid
+INNER JOIN
+	shipping s ON o.merchant_uid = s.merchant_uid
+WHERE
+	o.member_id = 'rlaxoals97'
+ORDER BY
+	o.updated_at DESC;

@@ -26,7 +26,9 @@
 		INNER JOIN
 			shipping s ON o.merchant_uid = s.merchant_uid
 		WHERE
-			o.member_id = #{memberId};
+			o.member_id = #{memberId}
+		ORDER BY
+			o.updated_at DESC;
 	</select>
 	
 	<!-- 사용자가 구입한 상품 총 합계 맵핑 구문-->

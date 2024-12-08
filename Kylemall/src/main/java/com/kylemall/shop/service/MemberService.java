@@ -18,6 +18,12 @@ public class MemberService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;	
 	
+		public void deleteMember(String memberId) {
+
+			memberMapper.deleteMember(memberId);
+			
+		}
+	
 	// 회원 로그인 요청을 처리하고 결과를 반환하는 메서드	
 		public int login(String id, String pass) {
 			int result = -1;

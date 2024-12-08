@@ -43,7 +43,45 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> <hr>
+		
+		<!-- Detailed Description Section -->
+		<section class="py-5">
+		    <div class="container px-4 px-lg-5">
+		        <h2 class="fw-bolder mb-4">상세 설명</h2>
+		        <p class="text-center fs-5">[[${product.productDescription}]]</p> <!-- 상세 설명을 보여주는 부분 -->
+		    </div>
+		</section>
+		
+		<!-- Reviews Section -->
+        <!-- <section class="py-5 bg-light">
+            <div class="container px-4 px-lg-5">
+                <h2 class="fw-bolder mb-4">사용자 리뷰</h2>
+                <div class="row gx-4 gx-lg-5">
+                    <th:block th:if="${not #lists.isEmpty(reviewList)}">
+                        <th:block th:each="review : ${reviewList}">
+                            <div class="col mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">[[${review.reviewerName}]]</h5>
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <th:block th:each="star : ${#numbers.range(1, 5)}">
+                                                <div th:class="${star <= review.rating} ? 'bi-star-fill' : 'bi-star'}"></div>
+                                            </th:block>
+                                        </div>
+                                        <p class="card-text">[[${review.reviewContent}]]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${#lists.isEmpty(reviewList)}">
+                        <p>등록된 리뷰가 없습니다.</p>
+                    </th:block>
+                </div>
+            </div>
+        </section> -->
+		
         <!-- Related items section-->
         <section class="py-5 bg-light">
             <div class="container px-4 px-lg-5 mt-5">
@@ -61,12 +99,12 @@
 								<!-- Product image-->
 								<th:block th:unless="${product.imageUrl == null}">
 									<img class="card-img-top" th:src="${product.imageUrl}"
-										th:alt="${product.productName}" />
+										th:alt="${product.productName}"  style="height: 300px"/>
 								</th:block>
 								<th:block th:if="${product.imageUrl == null}">
 									<img class="card-img-top"
 										src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-										th:alt="${product.productName}" />
+										th:alt="${product.productName}" style="height: 300px"/>
 								</th:block>
 								<!-- Product details-->
 								<div class="card-body p-4">

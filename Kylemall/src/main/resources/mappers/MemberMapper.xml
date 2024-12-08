@@ -12,6 +12,11 @@
 -->
 <mapper namespace="com.kylemall.shop.mapper.MemberMapper">
 
+	<!-- 회원 id에 해당하는 회원 정보를 삭제하는 맵핑 구문 -->
+	<delete id="deleteMember">
+		DELETE FROM member WHERE id = #{memberId};
+	</delete>
+
 	<!--회원 id에 해당하는 회원 정보를 반환하는 맵핑 구문-->
 	<select id="getMember" resultType="Member">
 		SELECT * FROM member WHERE id = #{id}

@@ -30,11 +30,11 @@ public class ProductService {
 		
 	}
 	
-	public Map<String, Object> mainList() {
+	public Map<String, Object> newMainList() {
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		
-		List<Product> mList = productMapper.productList(0, 8, "null", "null", 0);
+		List<Product> mList = productMapper.productList(0, 4, "null", "null", 0);
 		
 		resultMap.put("mList", mList);
 		

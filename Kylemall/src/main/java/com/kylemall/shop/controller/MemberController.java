@@ -27,12 +27,23 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes("member")
 @Slf4j
 public class MemberController {
+	
 	// 회원 관련 Business 로직을 담당하는 객체를 의존성 주입하도록 설정
 	@Autowired
 	private MemberService memberService;
 	
 	@Autowired
 	private PaymentService paymentService;
+	
+	@GetMapping("/deleteMember")
+	public String deleteMember(Model model, HttpSession session) {
+		
+		Member member = (Member) session.getAttribute("member");
+		session.setAttribute("isLogin", false);
+		memberService.deleteMember(member.getId());
+		
+		return "redirect:/mainList";
+	}
 	
 	@GetMapping("/myPage")
 	public String myPage(Model model, HttpSession session) {

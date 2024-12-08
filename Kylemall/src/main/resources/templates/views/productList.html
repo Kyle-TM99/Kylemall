@@ -6,8 +6,18 @@
 	<div class="container px-4 px-lg-5 mt-5 ">
 	<div class="row ">
 		<div class="col text-center">
-			<h2>카테고리명</h2>
-			<p>카테고리 소개 문구</p>
+			<th:block th:if="${category == 1}">
+                <h2 class="fs-3 fw-bold" th:text="#{pro.list.category.outer}">게시글 리스트</h2>
+				<p th:text="#{pro.list.category.outer.desc}">카테고리 소개 문구</p>
+            </th:block>
+			<th:block th:if="${category == 2}">
+                <h2 class="fs-3 fw-bold" th:text="#{pro.list.category.top}">게시글 리스트</h2>
+				<p th:text="#{pro.list.category.top.desc}">카테고리 소개 문구</p>
+            </th:block>
+			<th:block th:if="${category == 3}">
+                <h2 class="fs-3 fw-bold" th:text="#{pro.list.category.bottom}">게시글 리스트</h2>
+				<p th:text="#{pro.list.category.bottom.desc}">카테고리 소개 문구</p>
+            </th:block>
 		</div>
 	</div>
 	</div>

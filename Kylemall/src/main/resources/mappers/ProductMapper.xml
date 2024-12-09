@@ -46,8 +46,14 @@
 			</if>
 		</trim>
 	</where>
-	ORDER BY
-	p.created_at DESC
+	<choose>
+		<when test="sortBy == 'name'">
+			ORDER BY p.product_name
+		</when>
+		<otherwise>
+			ORDER BY p.created_at DESC
+		</otherwise>
+	</choose>
 	LIMIT #{startRow}, #{num}
 </select>
 

@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS orders (
     order_status VARCHAR(10) DEFAULT '주문 완료',
     product_title VARCHAR(50) NOT NULL,
     order_msg VARCHAR(300),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    order_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    order_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT orders_member_id_fk FOREIGN KEY (member_id) REFERENCES member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SELECT * FRom orders;
@@ -98,8 +98,8 @@ CREATE TABLE IF NOT EXISTS payment (
     amount INTEGER NOT NULL,              -- 결제 금액
     paid_at TIMESTAMP NULL,                      -- 결제 완료 시간
     cancelled_at TIMESTAMP NULL,                 -- 결제 취소 시간
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 레코드 생성 시간
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 레코드 업데이트 시간
+    payment_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 레코드 생성 시간
+	payment_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 레코드 업데이트 시간
     CONSTRAINT fk_order FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SELECT * FROM payment;
@@ -119,8 +119,8 @@ CREATE TABLE IF NOT EXISTS shipping (
     shipping_date DATETIME,                      -- 배송 시작일
     estimated_arrival DATETIME,                  -- 예상 도착일
     shipping_msg VARCHAR(300),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성일
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정일
+    shipping_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 생성일
+    shipping_updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정일
     FOREIGN KEY (merchant_uid) REFERENCES orders(merchant_uid) -- order_id는 orders 테이블의 외래 키
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

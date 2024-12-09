@@ -18,7 +18,7 @@
             
             <div class="row mb-3 align-items-center">
                 <div class="col-4 text-end font-weight-bold border-end">결제일</div>
-                <div class="col-8 ps-3" id="order-id">[[${order.createdAt}]]</div>
+                <div class="col-8 ps-3" id="order-id">[[${#dates.format(order.orderCreatedAt, 'yyyy-MM-dd HH:mm:SS')}]]</div>
             </div>
             <div class="row mb-3 align-items-center">
                 <div class="col-4 text-end font-weight-bold border-end">주문 번호</div>

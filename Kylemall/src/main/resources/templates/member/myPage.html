@@ -58,7 +58,8 @@
                                             <div class="d-flex align-items-center">
                                                 <div>
                                                     <div class="badge bg-primary ms-2">[[${order.orderStatus}]]</div>
-                                                    <span class="fw-bold ms-2 mt-2">[[${order.productTitle}]]</span>
+                                                    <span class="fw-bold ms-2 mt-2">[[${order.productTitle}]]</span> 
+                                                    <span class="text-muted ms-2 mt-2">[[${#dates.format(order.orderCreatedAt, 'yyyy-MM-dd')}]]</span>
                                                 </div>
                                                 <button class="btn btn-link ms-auto" th:data-bs-toggle="collapse"
                                                         th:data-bs-target="'#orderDetails' + ${iterStat.index}"
@@ -72,7 +73,7 @@
                                                 <div class="card card-body mt-3">
                                                     <h5 class="mb-3">주문 정보</h5>
                                                     <p><strong>주문 번호:</strong> [[${order.merchantUid}]]</p>
-                                                    <p><strong>주문 날짜:</strong> [[${ #dates.format(order.createdAt, 'yyyy-MM-dd HH:mm:SS')}]]</p>
+                                                    <p><strong>결제 날짜:</strong> [[${ #dates.format(order.paymentCreatedAt, 'yyyy-MM-dd HH:mm:SS')}]]</p>
                                                     <p><strong>결제 금액:</strong> [[${order.amount}]] 원</p>
                                                     <p><strong>주문 메시지:</strong> [[${order.orderMsg}]]</p>
 

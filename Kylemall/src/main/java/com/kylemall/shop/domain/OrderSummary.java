@@ -29,8 +29,8 @@ public class OrderSummary {
     private String orderStatus;           // 주문 상태
     private String productTitle;          // 상품명
     private String orderMsg;              // 주문 메시지
-    private Timestamp createdAt;     // 주문 생성 시간
-    private Timestamp updatedAt;     // 주문 업데이트 시간
+    private Timestamp orderCreatedAt;     // 주문 생성 시간
+    private Timestamp orderUpdatedAt;     // 주문 업데이트 시간
     private String memberId;              // 회원 ID
 
     // shipping 테이블 필드

@@ -28,7 +28,7 @@
 		WHERE
 			o.member_id = #{memberId}
 		ORDER BY
-			o.updated_at DESC;
+			o.order_updated_at DESC;
 	</select>
 	
 	<!-- 사용자가 구입한 상품 총 합계 맵핑 구문-->

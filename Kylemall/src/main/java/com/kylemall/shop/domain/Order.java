@@ -20,6 +20,6 @@ public class Order {
     private String orderStatus; // 주문 상태
     private String productTitle; // 상품명
     private String orderMsg;      // 주문 메세지
-    private Timestamp createdAt; // 생성 일자
-    private Timestamp updatedAt; // 수정 일자
+    private Timestamp orderCreatedAt; // 생성 일자
+    private Timestamp orderUpdatedAt; // 수정 일자
 }

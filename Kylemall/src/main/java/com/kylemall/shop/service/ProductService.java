@@ -22,27 +22,21 @@ public class ProductService {
 	@Autowired
 	private ProductMapper productMapper;
 	
-	public List<Product> categoryList(int category) {
+	public List<Product> categoryList(int category, String sortBy) {
 		
-		List<Product> pList = productMapper.productList(0, 4, "null", "null", category);
+		List<Product> pList = productMapper.productList(0, 4, "null", "null", category, sortBy);
 		
 		return pList;
 		
 	}
 	
-	public Map<String, Object> newMainList() {
+	public List<Product> mainList(String sortBy) {
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		
-		List<Product> mList = productMapper.productList(0, 4, "null", "null", 0);
-		
-		resultMap.put("mList", mList);
-		
-		return resultMap;
+		return productMapper.productList(0, 4, "null", "null", 0, sortBy);
 		
 	}
 	
-	public Map<String, Object> productList(int pageNum, String type, String keyword, int category) {
+	public Map<String, Object> productList(int pageNum, String type, String keyword, int category, String sortBy) {
 		
 		int currentPage = pageNum;
 		
@@ -51,7 +45,7 @@ public class ProductService {
 		
 		int listCount = productMapper.productCount(category, type, keyword);
 		
-		List<Product> productList = productMapper.productList(startRow, PAGE_SIZE, type, keyword, category);
+		List<Product> productList = productMapper.productList(startRow, PAGE_SIZE, type, keyword, category, sortBy);
 		
 		int pageCount = listCount / PAGE_SIZE + (listCount % PAGE_SIZE == 0 ? 0 : 1);
 		

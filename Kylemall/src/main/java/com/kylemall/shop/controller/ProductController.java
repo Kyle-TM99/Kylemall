@@ -42,9 +42,10 @@ public class ProductController {
 		@RequestParam(value = "pageNum", required = false, defaultValue = "1") int pageNum,
 		@RequestParam(value = "type", required = false, defaultValue = "null") String type,
 		@RequestParam(value = "keyword", required = false, defaultValue = "null") String keyword,
-		@RequestParam(value = "category", required = false, defaultValue = "0") int category) {
+		@RequestParam(value = "category", required = false, defaultValue = "0") int category,
+		@RequestParam(value = "sortBy", required = false, defaultValue = "0") String sortBy) {
 		
-		Map<String, Object> modelMap = productService.productList(pageNum, type, keyword, category);
+		Map<String, Object> modelMap = productService.productList(pageNum, type, keyword, category, sortBy);
 		model.addAllAttributes(modelMap);
 		
 		return "views/productList";
@@ -52,8 +53,11 @@ public class ProductController {
 	
 	@GetMapping({"/", "/mainList"})
 	public String mainList(Model model) {
-		Map<String, Object> modelMap = productService.newMainList();
-		model.addAllAttributes(modelMap);
+		 List<Product> newList = productService.mainList("default");
+		 List<Product> bestList = productService.mainList("name");
+		
+		model.addAttribute("nList", newList);
+		model.addAttribute("bList", bestList);
 		return "views/mainList";
 	}
 	
@@ -67,7 +71,7 @@ public class ProductController {
 		
 		boolean searchOption = (type.equals("null") || keyword.equals("null")) ? false : true;
 		Product product = productService.getProduct(no);
-		List<Product> pList = productService.categoryList(category);
+		List<Product> pList = productService.categoryList(category, "default");
 		
 		model.addAttribute("product", product);
 		model.addAttribute("pList", pList);

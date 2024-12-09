@@ -21,7 +21,7 @@ public class Payment {
     private Integer amount;            // 결제 금액
     private Timestamp paidAt;             // 결제 완료 시간
     private Timestamp cancelledAt;        // 결제 취소 시간
-    private Timestamp createdAt;          // 레코드 생성 시간
-    private Timestamp updatedAt;          // 레코드 업데이트 시간
+    private Timestamp paymentCreatedAt;          // 레코드 생성 시간
+    private Timestamp paymentUpdatedAt;          // 레코드 업데이트 시간
 	
 }

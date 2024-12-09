@@ -53,34 +53,7 @@
 		    </div>
 		</section>
 		
-		<!-- Reviews Section -->
-        <!-- <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5">
-                <h2 class="fw-bolder mb-4">사용자 리뷰</h2>
-                <div class="row gx-4 gx-lg-5">
-                    <th:block th:if="${not #lists.isEmpty(reviewList)}">
-                        <th:block th:each="review : ${reviewList}">
-                            <div class="col mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">[[${review.reviewerName}]]</h5>
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <th:block th:each="star : ${#numbers.range(1, 5)}">
-                                                <div th:class="${star <= review.rating} ? 'bi-star-fill' : 'bi-star'}"></div>
-                                            </th:block>
-                                        </div>
-                                        <p class="card-text">[[${review.reviewContent}]]</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </th:block>
-                    </th:block>
-                    <th:block th:if="${#lists.isEmpty(reviewList)}">
-                        <p>등록된 리뷰가 없습니다.</p>
-                    </th:block>
-                </div>
-            </div>
-        </section> -->
+		
 		
         <!-- Related items section-->
         <section class="py-5 bg-light">

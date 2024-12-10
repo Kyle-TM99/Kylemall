@@ -24,7 +24,7 @@
 	
 	<!--회원 정보를 추가하는 맵핑 구문-->
 	<insert id="addMember" parameterType="Member">
-		INSERT INTO member
+		INSERT INTO member(id, name, pass, email, mobile, zipcode, address1, address2, email_get, reg_date, nickname) 
 		VALUES(#{id}, #{name}, #{pass},  #{email}, #{mobile}, 
 				#{zipcode}, #{address1}, #{address2},
 				#{emailGet}, SYSDATE(), #{nickname})

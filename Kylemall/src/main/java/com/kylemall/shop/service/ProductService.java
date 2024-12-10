@@ -41,7 +41,12 @@ public class ProductService {
 		int currentPage = pageNum;
 		
 		int startRow = (currentPage - 1) * PAGE_SIZE;
-		boolean searchOption = (type.equals("null") || keyword.equals("null")) ? false : true;
+		
+		boolean searchOption = keyword.equals("null") ? false : true;
+		
+		if(searchOption) {
+			type = "title";
+		}
 		
 		int listCount = productMapper.productCount(category, type, keyword);
 		
@@ -68,7 +73,6 @@ public class ProductService {
 		resultMap.put("category", category);
 		
 		if(searchOption) {
-			resultMap.put("type", type);
 			resultMap.put("keyword", keyword);
 		}
 		

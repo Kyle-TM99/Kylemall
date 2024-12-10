@@ -18,6 +18,9 @@
                 <h2 class="fs-3 fw-bold" th:text="#{pro.list.category.bottom}">게시글 리스트</h2>
 				<p th:text="#{pro.list.category.bottom.desc}">카테고리 소개 문구</p>
             </th:block>
+            <th:block th:if=${searchOption}>
+            	<h3 class="fs-3 fw-bold text-center">"[[${keyword}]]" 검색 결과</h3>
+            </th:block>
 		</div>
 	</div>
 	</div>
@@ -81,7 +84,7 @@
 					</th:block>
 				</th:block>
 				<th:block th:if="${#lists.isEmpty(pList)}">
-					<p>등록된 상품이 존재하지 않습니다.</p>
+					<p class="text-center">등록된 상품이 존재하지 않습니다.</p>
 				</th:block>
 				<!-- 하나의 상품 칸 -->
 			</div>

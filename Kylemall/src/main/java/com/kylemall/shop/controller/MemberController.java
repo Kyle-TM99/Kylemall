@@ -139,7 +139,7 @@ public class MemberController {
 			@RequestParam("mobile2") String mobile2, 
 			@RequestParam("mobile3") String mobile3,
 			@RequestParam(value="emailGet", required=false, 
-				defaultValue="false")boolean emailGet) {		
+				defaultValue="false")boolean emailGet) {	
 		
 		member.setPass(pass1);
 		member.setEmail(emailId + "@" + emailDomain);

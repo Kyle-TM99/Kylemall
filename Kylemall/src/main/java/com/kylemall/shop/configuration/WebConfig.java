@@ -42,11 +42,13 @@ public class WebConfig implements WebMvcConfigurer {
 	                      "/",              // 메인 페이지
 	                      "/mainList",		// 메인 페이지
 	                      "/productList",   // 상품 리스트
+	                      "/member/**",
 	                      "/login",
 	                      "/loginForm",     // 로그인 페이지
 	                      "/joinChoice",    // 회원가입 선택   
 	                      "/joinForm", // 회원가입 페이지
 	                      "/overlapIdCheck", // 아이디 중복 확인 페이지
+	                      "/joinResult",     
 	                      "/css/**",        // 정적 자원 (CSS)
 	                      "/js/**",         // 정적 자원 (JS)
 	                      "/images/**",      // 정적 자원 (이미지)

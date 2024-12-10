@@ -24,5 +24,6 @@ public class Member {
     private boolean emailGet;
     private Timestamp regDate;
     private String nickname;
+    private String isAdmin;
 	
 }

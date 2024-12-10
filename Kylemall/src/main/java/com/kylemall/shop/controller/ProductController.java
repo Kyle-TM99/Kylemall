@@ -26,6 +26,11 @@ public class ProductController {
 	@Autowired
 	private PaymentService paymentService;
 	
+	@GetMapping("/addProductForm")
+	public String addProductForm(Model model) {
+		return "views/addProduct";
+	}
+	
 	@GetMapping("/orderComplete")
 	public String orderComplete(Model model,
 			@RequestParam(value = "merchantUid", required = true) String merchantUid) {
@@ -46,6 +51,7 @@ public class ProductController {
 		@RequestParam(value = "sortBy", required = false, defaultValue = "0") String sortBy) {
 		
 		Map<String, Object> modelMap = productService.productList(pageNum, type, keyword, category, sortBy);
+		
 		model.addAllAttributes(modelMap);
 		
 		return "views/productList";

@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS member (
     address2 VARCHAR(60) NOT NULL,
     email_get TINYINT(1) NOT NULL,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    nickname VARCHAR(20) NOT NULL
+    nickname VARCHAR(20) NOT NULL,
+    is_admin TINYINT(1) DEFAULT 0 NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SELECT * FROM member;
 
@@ -126,6 +127,9 @@ CREATE TABLE IF NOT EXISTS shipping (
 
 SELECT * FROM shipping;
 
+######### 1:1 게시판 ########
+
+
 ####### 멤버 제약 조건 casecade 추가 ########
 
 ALTER TABLE shoppingcart 
@@ -171,8 +175,9 @@ ON DELETE CASCADE;
 
 ######## 데이터 삽입 ########
 -- 회원
-INSERT INTO member VALUES('rlaxoals97', '김태민', '$2a$10$n6QovfeGX1u1EMXfVTGP3u8opMRfnJ4fVxjNReJkBcukOmZLjDTgq', 'rlaxoals97@naver.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', 1, '2024-11-04 18:26:08', 'Kyle');
-
+INSERT INTO member VALUES('rlaxoals97', '김태민', '$2a$10$n6QovfeGX1u1EMXfVTGP3u8opMRfnJ4fVxjNReJkBcukOmZLjDTgq', 'rlaxoals97@naver.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', 1, '2024-11-04 18:26:08', 'Kyle','0');
+INSERT INTO member VALUES('admin', '관리자', '$2a$10$oFLYfIWiePmMGHwDzYd23.h3A47bkFk/9DvSSUtoBbN2lIKQzpzK.', 'rlaxoals9977@gmail.com', '010-5578-5037', '08759', '서울 관악구 신림동7길 28 (신림동)', '402호', '0', '2024-12-10 17:14:04', '관리자', '1');
+)
 -- 카테고리
 INSERT INTO category VALUES(1, '아우터');
 INSERT INTO category VALUES(2, '상의');

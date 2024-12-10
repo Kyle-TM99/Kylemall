@@ -33,13 +33,13 @@
 										<th:block th:unless="${product.imageUrl == null}">
 											<img class="card-img-top" th:src="${product.imageUrl}"
 												th:alt="${product.productName}"
-												style="width: 24.5%; height: 200px; margin-right: 20px;" />
+												style="width: 15%; height: 200px; margin-right: 20px;" />
 										</th:block>
 										<th:block th:if="${product.imageUrl == null}">
 											<img class="card-img-top"
 												src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
 												th:alt="${product.productName}"
-												style="width: 24.5%; height: 200px; margin-right: 20px;" />
+												style="width: 15%; height: 200px; margin-right: 20px;" />
 										</th:block>
 
 										<!-- Product details -->
@@ -51,8 +51,7 @@
 												</div>
 												<div class="col text-end">
 													<span class="text-muted" style="font-size: 0.9rem;">장바구니
-														추가 : [[${#dates.format(product.addedAt, 'yyyy-MM-dd
-														HH:mm')}]]</span>
+														추가 : [[${#dates.format(product.addedAt, 'yyyy-MM-dd HH:mm')}]]</span>
 												</div>
 											</div>
 											<div class="row">
@@ -82,15 +81,13 @@
 											<!-- Quantity input field -->
 											<div class="row my-2">
 												<div class="col text-end">
-													<label for="quantity-[[${product.productNo}]]"
-														class="form-label">수량</label> <input type="number"
-														class="form-control text-end"
+													<label for="quantity-[[${product.productNo}]]" class="form-label">수량</label>
+														<input type="number" class="form-control text-end"
 														id="quantity-[[${product.productNo}]]" name="quantity"
 														th:value="${product.quantity}" min="1"
 														style="max-width: 8rem; margin-left: auto; margin-right: 0;">
 												</div>
 											</div>
-											
 										</div>
 									</div>
 								</td>

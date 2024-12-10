@@ -29,7 +29,7 @@ $(document).ready(function() {
 				$("#shoppingCartQuantity").text(resData.cnt);
 	        },
 	        error: function (xhr, status, error) {
-	            alert("장바구니 삭제에 실패했습니다.");
+	            alert("수량바꾸기에 실패했습니다.");
 	            console.error(error);
 	        }
 	    });
@@ -76,7 +76,7 @@ $(document).ready(function() {
 					$("#shoppingCartQuantity").text(resData.cnt);
 		        },
 		        error: function (xhr, status, error) {
-		            alert("장바구니 삭제에 실패했습니다.");
+		            alert("장바구니 비우기에 실패했습니다.");
 		            console.error(error);
 		        }
 		    });
@@ -89,7 +89,7 @@ $(document).ready(function() {
 	// 장바구니 제거 클릭 시 이벤트 핸들러
 	$(document).on("click", "#deleteCart", function () {
 	    // 장바구니 상품 번호
-	    let cartNo = $(this).siblings("input[type='hidden']").val();
+	    let cartNo = $(this).siblings("#cartNo").val();
 
 	    // AJAX 요청
 	    $.ajax({
@@ -251,7 +251,7 @@ $(document).ready(function() {
 
 		// 각 상품의 수량과 가격 계산
 		$(".table tr").each(function() {
-			const quantity = $(this).find("input[type='number']").val(); // 수량
+			const quantity = $(this).find("#inputQuantity").val(); // 수량
 			const priceElement = $(this).find(".product-price"); // 가격 정보
 			const price = parseInt(priceElement.attr("data-price")); // 가격 가져오기
 

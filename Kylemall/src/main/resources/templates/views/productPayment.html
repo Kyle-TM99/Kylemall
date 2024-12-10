@@ -28,11 +28,17 @@
 
 									<!-- Product image -->
 									<th:block th:unless="${product.imageUrl == null}">
-										<img class="card-img-top" th:src="${product.imageUrl}" th:alt="${product.productName}" style="width: 20%; height: 200px; margin-right: 20px;" />
+										<img class="card-img-top" th:src="${product.imageUrl}"
+											th:alt="${product.productName}"
+											style="width: 15%; height: 200px; margin-right: 20px;" />
 									</th:block>
 									<th:block th:if="${product.imageUrl == null}">
-										<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" th:alt="${product.productName}" style="width: 20%; height: 200px; margin-right: 20px;" />
+										<img class="card-img-top"
+											src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+											th:alt="${product.productName}"
+											style="width: 15%; height: 200px; margin-right: 20px;" />
 									</th:block>
+
 
 									<!-- Product details -->
 									<div style="flex-grow: 1;">

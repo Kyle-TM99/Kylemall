@@ -4,29 +4,18 @@ $(document).ready(function() {
 	updateTotalPrice();
 	
 	// 장바구니 내에서 수량 변경 시 이벤트 핸들러
-	$(document).on("input", "input[type='number']", function() {
+	$(document).on("change", "input[id^='quantity-']", function() {
 		
 		$.ajax({
 	        url: "changeQuantity.ajax",
 	        type: "POST",
 			dataType: "json",
 	        success: function (resData) {
-	            // 장바구니 목록 비우기
-	            $("#cartList").empty();
-
-	            let emptyMessage = `
-	                <tr>
-	                    <td class="text-center pt-5 pb-4">
-	                        <p>장바구니에 추가한 물건이 존재하지 않습니다.</p>
-	                    </td>
-	                </tr>`;
-	            $("#cartList").append(emptyMessage);
-
+				
+				
+				
 				// 가격 업데이트
 	            updateTotalPrice();
-				
-				// 헤더 장바구니 카운트 업데이트
-				$("#shoppingCartQuantity").text(resData.cnt);
 	        },
 	        error: function (xhr, status, error) {
 	            alert("수량바꾸기에 실패했습니다.");
@@ -247,21 +236,25 @@ $(document).ready(function() {
 
 	// 총 결제 금액 업데이트 함수
 	function updateTotalPrice() {
-		let totalPrice = 0;
+	    let totalPrice = 0;
 
-		// 각 상품의 수량과 가격 계산
-		$(".table tr").each(function() {
-			const quantity = $(this).find("#inputQuantity").val(); // 수량
-			const priceElement = $(this).find(".product-price"); // 가격 정보
-			const price = parseInt(priceElement.attr("data-price")); // 가격 가져오기
+	    // 각 상품의 수량과 가격 계산
+	    $(".table tr").each(function() {
+	        const quantityElement = $(this).find("input[id^='quantity-']"); // 수량 입력 필드
+	        const priceElement = $(this).find(".product-price"); // 가격 정보
 
-			if (!isNaN(price) && !isNaN(quantity)) {
-				totalPrice += price * quantity;
-			}
-		});
+	        if (quantityElement.length && priceElement.length) {
+	            const quantity = parseInt(quantityElement.val()); // 수량
+	            const price = parseInt(priceElement.attr("data-price")); // 가격 가져오기
 
-		// 총 결제 금액 반영
-		$("#totalPrice").text(`${totalPrice.toLocaleString()}원`);
+	            if (!isNaN(price) && !isNaN(quantity)) {
+	                totalPrice += price * quantity;
+	            }
+	        }
+	    });
+
+	    // 총 결제 금액 반영
+	    $("#totalPrice").text(`${totalPrice.toLocaleString()}원`);
 	}
 
 });

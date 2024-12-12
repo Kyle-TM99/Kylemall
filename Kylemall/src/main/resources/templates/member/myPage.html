@@ -75,6 +75,7 @@
                                                     <p><strong>주문 번호:</strong> [[${order.merchantUid}]]</p>
                                                     <p><strong>결제 날짜:</strong> [[${ #dates.format(order.paymentCreatedAt, 'yyyy-MM-dd HH:mm:SS')}]]</p>
                                                     <p><strong>결제 금액:</strong> [[${order.amount}]] 원</p>
+                                                    <p><strong>결제 수단:</strong> [[${order.paymentMethod}]]</p>
                                                     <p><strong>주문 메시지:</strong> [[${order.orderMsg}]]</p>
 
                                                     <hr>
@@ -84,9 +85,11 @@
                                                     <p><strong>배송 주소:</strong> [[${order.address}]]</p>
                                                     <p><strong>운송장 번호:</strong> [[${order.trackingNumber}]]</p>
                                                     <p><strong>배송 메시지:</strong> [[${order.shippingMsg}]]</p>
-
-                                                    <div class="text-end mt-3">
-                                                        <button class="btn btn-primary btn-sm">주문 상세 보기</button>
+													
+													<hr>
+													
+                                                    <div class="text-end">
+                                                        <button class="btn btn-primary btn-sm">주문 상세</button>
                                                     </div>
                                                 </div>
                                             </div>

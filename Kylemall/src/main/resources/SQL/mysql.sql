@@ -128,7 +128,20 @@ CREATE TABLE IF NOT EXISTS shipping (
 SELECT * FROM shipping;
 
 ######### 1:1 게시판 ########
-
+DROP TABLE IF EXISTS board;
+CREATE TABLE IF NOT EXISTS board(
+board_no INTEGER AUTO_INCREMENT PRIMARY KEY,
+board_title VARCHAR(50) NOT NULL,
+board_content VARCHAR(10000) NOT NULL,
+board_reg_date TIMESTAMP NOT NULL,
+board_view INTEGER NOT NULL,
+board_category_code INTEGER NOT NULL,
+member_id VARCHAR(20) NOT NULL,
+board_like INTEGER DEFAULT 0,
+board_dislike INTEGER DEFAULT 0,
+CONSTRAINT member_id_fk FOREIGN KEY (member_id) REFERENCES member(id),
+CONSTRAINT board_category_code_fk FOREIGN KEY (board_category_code) REFERENCES category(board_category_code)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ####### 멤버 제약 조건 casecade 추가 ########
 

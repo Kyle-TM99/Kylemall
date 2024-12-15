@@ -22,4 +22,8 @@ public class CustomerSupportService {
 		return customerMapper.viewFaq();
 	};
 	
+	public void insertFaq(String question, String answer) {
+		customerMapper.insertFaq(question, answer);
+	}
+	
 }

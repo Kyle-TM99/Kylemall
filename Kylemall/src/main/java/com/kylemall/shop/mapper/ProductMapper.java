@@ -21,5 +21,8 @@ public interface ProductMapper {
 	// 하나의 상품 정보를 가져오는 메서드
 	Product getProduct(int no);
 	
+	// 관리자가 상품을 추가하는 메서드
+	void addProduct(Product product);
+	
 	
 }

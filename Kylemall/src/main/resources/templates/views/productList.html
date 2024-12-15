@@ -44,7 +44,7 @@
 								</th:block>
 								<!-- Product image-->
 								<th:block th:unless="${product.imageUrl == null}">
-									<img class="card-img-top" th:src="${product.imageUrl}"
+									<img class="card-img-top" th:src="'kylemallproducts/'+${product.imageUrl}"
 										th:alt="${product.productName}" style="height: 300px" />
 								</th:block>
 								<th:block th:if="${product.imageUrl == null}">

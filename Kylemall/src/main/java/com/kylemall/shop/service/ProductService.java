@@ -15,12 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class ProductService {
-
+	
+	private static final int MANAGEMENT_SIZE = 10;
 	private static final int PAGE_SIZE = 8;
 	private static final int PAGE_GROUP = 10;
 	
 	@Autowired
 	private ProductMapper productMapper;
+	
+	public void addProduct(Product product) {
+		productMapper.addProduct(product);
+	}
 	
 	public List<Product> categoryList(int category, String sortBy) {
 		
@@ -50,7 +55,7 @@ public class ProductService {
 		
 		int listCount = productMapper.productCount(category, type, keyword);
 		
-		List<Product> productList = productMapper.productList(startRow, PAGE_SIZE, type, keyword, category, sortBy);
+		List<Product> productList = productMapper.productList(startRow, MANAGEMENT_SIZE, type, keyword, category, sortBy);
 		
 		int pageCount = listCount / PAGE_SIZE + (listCount % PAGE_SIZE == 0 ? 0 : 1);
 		

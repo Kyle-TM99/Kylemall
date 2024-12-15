@@ -15,7 +15,7 @@
 <!-- 관리자가 상품을 등록하는 맵핑 구문 -->
 <insert id="addProduct" parameterType="Product">
 	INSERT INTO product (product_name, product_description, product_price, stock_quantity, image_url, created_at, updated_at, category_no, sale_ok, sale_price) VALUES
-	(#{productName}, #{productDescription}, #{productPrice}, #{stockQuantity}, #{imageUrl}, SYSDATE(), SYSDATE(), #{categoryNo}, #{saleOk}, #{salePrice})
+	(#{productName}, #{productDescription}, #{productPrice}, #{stockQuantity}, #{imageUrl}, SYSDATE(), SYSDATE(), #{categoryName}, #{saleOk}, #{salePrice})
 </insert>
 
 <!-- 하나의 상품 정보를 가져오는 맵핑 구문 -->

@@ -19,5 +19,10 @@
 	<delete id="deleteFaq">
 		DELETE FROM faq WHERE faq_id = #{faqId}
 	</delete>
+	
+	<insert id="insertFaq" parameterType="map">
+		INSERT INTO faq(question, answer) 
+		VALUES(#{question}, #{answer}); 
+	</insert>
 
 </mapper>

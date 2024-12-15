@@ -12,7 +12,7 @@
                     		<img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." />
                     	</th:block>
                     	<th:block th:unless="${product.imageUrl == null}">
-                    		<img class="card-img-top" th:src="${product.imageUrl}"	th:alt="${product.productName}" />
+                    		<img class="card-img-top" th:src="'kylemallproducts/'+${product.imageUrl}"	th:alt="${product.productName}" />
                     	</th:block>
                     </div>
                     <div class="col-md-6">
@@ -71,7 +71,7 @@
 								</th:block>
 								<!-- Product image-->
 								<th:block th:unless="${product.imageUrl == null}">
-									<img class="card-img-top" th:src="${product.imageUrl}"
+									<img class="card-img-top" th:src="'kylemallproducts/'+${product.imageUrl}"
 										th:alt="${product.productName}"  style="height: 300px"/>
 								</th:block>
 								<th:block th:if="${product.imageUrl == null}">

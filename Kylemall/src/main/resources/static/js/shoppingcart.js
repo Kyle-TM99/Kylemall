@@ -81,55 +81,57 @@ $(document).ready(function() {
                             ":" +
                             String(date.getMinutes()).padStart(2, "0");
 
-                        let result = `
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center position-relative">
-                                        <div class="row top-0 end-0 m-2">
-                                            <div class="col">
-                                                <input type="hidden" id="cartNo" value="${v.cartId}" />
-                                                <button id="deleteCart" type="button" class="btn btn-danger btn-sm">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <img class="card-img-top" src="${v.imageUrl || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}"
-                                            style="width: 15%; height: 200px; margin-right: 20px;" />
-                                        <div style="flex-grow: 1;">
-                                            <div class="row">
-                                                <div class="col">
-                                                    <span class="badge bg-primary">상품 번호: ${v.productNo}</span>
-                                                </div>
-                                                <div class="col text-end">
-                                                    <span class="text-muted" style="font-size: 0.9rem;">장바구니 추가: ${strDate}</span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col my-2">
-                                                    <strong><a class="fs-5 text-decoration-none fw-bold text-dark" href="/productDetail?no=${v.productNo}">
-                                                        ${v.productName}
-                                                    </a></strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col text-end text-muted">
-                                                    ${v.saleOk == 1
-                                                        ? `<div class="badge bg-dark text-white">Sale</div>
-                                                           <div class="product-price" data-sale="true" data-price="${v.salePrice}">가격: ${v.salePrice}원</div>`
-                                                        : `<span class="product-price" data-sale="false" data-price="${v.productPrice}">가격: ${v.productPrice}원</span>`}
-                                                </div>
-                                            </div>
-                                            <div class="row my-2">
-                                                <div class="col text-end">
-                                                    <label for="quantity-${v.productNo}" class="form-label">수량</label>
-                                                    <input type="number" class="form-control text-end" id="quantity-${v.productNo}" name="quantity"
-                                                        value="${v.quantity}" min="1" style="max-width: 5rem; margin-left: auto; margin-right: 0;" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>`;
+							let result = `
+							    <tr>
+							        <td>
+							            <div class="d-flex align-items-center position-relative">
+							                <div class="row top-0 end-0 m-2">
+							                    <div class="col">
+							                        <input type="hidden" id="cartNo" value="${v.cartId}" />
+							                        <button id="deleteCart" type="button" class="btn btn-danger btn-sm">
+							                            <i class="bi bi-x"></i>
+							                        </button>
+							                    </div>
+							                </div>
+							                <img class="card-img-top" 
+							                    src="${v.imageUrl ? 'kylemallproducts/' + v.imageUrl : 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}"
+							                    style="width: 15%; height: 200px; margin-right: 20px;" />
+							                <div style="flex-grow: 1;">
+							                    <div class="row">
+							                        <div class="col">
+							                            <span class="badge bg-primary">상품 번호: ${v.productNo}</span>
+							                        </div>
+							                        <div class="col text-end">
+							                            <span class="text-muted" style="font-size: 0.9rem;">장바구니 추가: ${strDate}</span>
+							                        </div>
+							                    </div>
+							                    <div class="row">
+							                        <div class="col my-2">
+							                            <strong><a class="fs-5 text-decoration-none fw-bold text-dark" href="/productDetail?no=${v.productNo}">
+							                                ${v.productName}
+							                            </a></strong>
+							                        </div>
+							                    </div>
+							                    <div class="row">
+							                        <div class="col text-end text-muted">
+							                            ${v.saleOk == 1
+							                                ? `<div class="badge bg-dark text-white">Sale</div>
+							                                   <div class="product-price" data-sale="true" data-price="${v.salePrice}">가격: ${v.salePrice}원</div>`
+							                                : `<span class="product-price" data-sale="false" data-price="${v.productPrice}">가격: ${v.productPrice}원</span>`}
+							                        </div>
+							                    </div>
+							                    <div class="row my-2">
+							                        <div class="col text-end">
+							                            <label for="quantity-${v.productNo}" class="form-label">수량</label>
+							                            <input type="number" class="form-control text-end" id="quantity-${v.productNo}" name="quantity"
+							                                value="${v.quantity}" min="1" style="max-width: 5rem; margin-left: auto; margin-right: 0;" readonly>
+							                        </div>
+							                    </div>
+							                </div>
+							            </div>
+							        </td>
+							    </tr>`;
+
                         $("#cartList").append(result);
                     });
                 } else {

@@ -267,3 +267,27 @@ WHERE
 	o.member_id = 'rlaxoals97'
 ORDER BY
 	o.updated_at DESC;
+
+######## 채팅방 ########
+DROP TABLE IF EXISTS chat_message;  -- 먼저 메시지 테이블을 삭제
+DROP TABLE IF EXISTS chat_room;     -- 그 다음 채팅방 테이블 삭제
+
+CREATE TABLE IF NOT EXISTS chat_room (
+    room_id VARCHAR(50) PRIMARY KEY,
+    room_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS chat_message (
+    message_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    room_id VARCHAR(50) NOT NULL,
+    sender VARCHAR(20) NOT NULL,
+    message TEXT NOT NULL,
+    message_type VARCHAR(10) NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_chat_room FOREIGN KEY (room_id) REFERENCES chat_room(room_id),
+    CONSTRAINT fk_chat_sender FOREIGN KEY (sender) REFERENCES member(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 기본 채팅방 생성
+INSERT INTO chat_room (room_id, room_name) VALUES ('public', '공개 채팅방');

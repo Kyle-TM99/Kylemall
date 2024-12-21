@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main_layout}">
+<th:block layout:fragment="head">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</th:block>
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>실시간 상담</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="chat-messages" style="height: 400px; overflow-y: scroll;">
+                            <!-- 채팅 메시지들이 여기에 표시됩니다 -->
+                        </div>
+                        <div class="input-group mt-3">
+                            <input type="text" id="message" class="form-control" placeholder="메시지를 입력하세요...">
+                            <button class="btn btn-primary" id="send">전송</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script th:inline="javascript">
+        let stompClient = null;
+        const username = /*[[${session.member.nickname}]]*/ 'default';
+
+        function connect() {
+            if(!username) {
+                console.error('Username not set');
+                window.location.href = '/loginForm';  // 로그인 페이지로 리다이렉트
+                return;
+            }
+
+            console.log("Connecting to chat...");
+            console.log("Username:", username);
+
+            const socket = new SockJS('/ws-chat');
+            stompClient = Stomp.over(socket);
+
+            // 디버그 모드 활성화
+            stompClient.debug = function(str) {
+                console.log('STOMP Debug:', str);
+            };
+
+            stompClient.connect({}, function(frame) {
+                console.log('Connected:', frame);
+                
+                // 구독 설정
+                stompClient.subscribe('/topic/public', function(message) {
+                    console.log('Received:', message);
+                    onMessageReceived(message);
+                });
+
+                // 입장 메시지 전송
+                stompClient.send("/app/chat.addUser", {}, 
+                    JSON.stringify({
+                        sender: username,
+                        type: 'JOIN',
+                        message: username + ' joined!'
+                    })
+                );
+
+            }, function(error) {
+                console.error('Connection error:', error);
+                // 5초 후 재연결 시도
+                setTimeout(connect, 5000);
+            });
+        }
+
+        function sendMessage() {
+            const messageInput = document.querySelector('#message');
+            const messageContent = messageInput.value.trim();
+            
+            if(messageContent) {
+                const chatMessage = {
+                    sender: username,
+                    message: messageContent,
+                    type: 'CHAT'
+                };
+                
+                if(stompClient && stompClient.connected) {
+                    console.log('Sending message:', chatMessage);
+                    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+                    messageInput.value = '';
+                } else {
+                    console.error('STOMP client not connected');
+                    // 연결이 끊어졌다면 재연결 시도
+                    connect();
+                }
+            }
+        }
+
+        function onMessageReceived(payload) {
+            const message = JSON.parse(payload.body);
+            const messageElement = document.createElement('div');
+            
+            if(message.type === 'JOIN') {
+                messageElement.classList.add('event-message');
+                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} joined!</em></p>`;
+            } else if (message.type === 'LEAVE') {
+                messageElement.classList.add('event-message');
+                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} left!</em></p>`;
+            } else {
+                messageElement.classList.add('chat-message');
+                const isMine = message.sender === username;
+                messageElement.classList.add(isMine ? 'mine' : 'other');
+                
+                messageElement.innerHTML = `
+                    <div class="d-flex ${isMine ? 'justify-content-end' : 'justify-content-start'} mb-2">
+                        ${!isMine ? `
+                            <div class="chat-avatar" style="background-color: ${getAvatarColor(message.sender)}">
+                                ${message.sender.charAt(0)}
+                            </div>
+                        ` : ''}
+                        <div class="message-content ms-2 me-2">
+                            ${!isMine ? `<div class="fw-bold sender-name">${message.sender}</div>` : ''}
+                            <div class="message-bubble">${message.message}</div>
+                            <small class="text-muted timestamp">${new Date().toLocaleTimeString()}</small>
+                        </div>
+                        ${isMine ? `
+                            <div class="chat-avatar" style="background-color: ${getAvatarColor(message.sender)}">
+                                ${message.sender.charAt(0)}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            const messageArea = document.querySelector('#chat-messages');
+            messageArea.appendChild(messageElement);
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+
+        // 페이지 로드 시 연결 시작
+        document.addEventListener('DOMContentLoaded', function() {
+            // 버튼 이벤트 리스너 등록
+            const sendButton = document.querySelector('#send');
+            if(sendButton) {
+                sendButton.addEventListener('click', sendMessage);
+            }
+
+            // 엔터키 이벤트 리스너 등록
+            const messageInput = document.querySelector('#message');
+            if(messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if(e.key === 'Enter') {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+
+            // WebSocket 연결 시작
+            connect();
+        });
+
+        // 페이지 언로드 시 연결 종료
+        window.addEventListener('beforeunload', function() {
+            if(stompClient) {
+                stompClient.disconnect();
+            }
+        });
+
+        function getAvatarColor(messageSender) {
+            let hash = 0;
+            for (let i = 0; i < messageSender.length; i++) {
+                hash = 31 * hash + messageSender.charCodeAt(i);
+            }
+            const colors = [
+                '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+                '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+            ];
+            return colors[Math.abs(hash % colors.length)];
+        }
+    </script>
+
+    <style>
+        .chat-message {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message-bubble {
+            padding: 8px 12px;
+            border-radius: 15px;
+            background-color: #f8f9fa;
+            display: inline-block;
+            word-break: break-word;
+        }
+
+        .chat-message.mine .message-bubble {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .chat-message.other .message-bubble {
+            background-color: #e9ecef;
+        }
+
+        .sender-name {
+            font-size: 0.9em;
+            margin-bottom: 2px;
+        }
+
+        .timestamp {
+            font-size: 0.75em;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .event-message {
+            text-align: center;
+            padding: 5px;
+            margin: 5px 0;
+            color: #6c757d;
+        }
+
+        #chat-messages {
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow-y: auto;
+        }
+
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</th:block>
+</html> 

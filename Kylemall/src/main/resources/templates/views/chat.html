@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </th:block>
 <th:block layout:fragment="content">
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card">
@@ -20,6 +20,12 @@
                             <!-- 채팅 메시지들이 여기에 표시됩니다 -->
                         </div>
                         <div class="input-group mt-3">
+                            <div class="input-group-prepend d-flex align-items-center me-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isNotice">
+                                    <label class="form-check-label" for="isNotice">공지사항</label>
+                                </div>
+                            </div>
                             <input type="text" id="message" class="form-control" placeholder="메시지를 입력하세요...">
                             <button class="btn btn-primary" id="send">전송</button>
                         </div>
@@ -67,7 +73,7 @@
                     JSON.stringify({
                         sender: username,
                         type: 'JOIN',
-                        message: username + ' joined!'
+                        message: username + ' 님이 입장하셨습니다!'
                     })
                 );
 
@@ -81,12 +87,13 @@
         function sendMessage() {
             const messageInput = document.querySelector('#message');
             const messageContent = messageInput.value.trim();
+            const isNotice = document.querySelector('#isNotice').checked;
             
             if(messageContent) {
                 const chatMessage = {
                     sender: username,
                     message: messageContent,
-                    type: 'CHAT'
+                    type: isNotice ? 'NOTICE' : 'CHAT'
                 };
                 
                 if(stompClient && stompClient.connected) {
@@ -107,11 +114,18 @@
             
             if(message.type === 'JOIN') {
                 messageElement.classList.add('event-message');
-                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} joined!</em></p>`;
+                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} 님이 입장하셨습니다!</em></p>`;
             } else if (message.type === 'LEAVE') {
                 messageElement.classList.add('event-message');
-                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} left!</em></p>`;
-            } else {
+                messageElement.innerHTML = `<p class="text-muted"><em>${message.sender} 님이 떠나셨습니다!</em></p>`;
+            } else if (message.type === 'NOTICE') {
+                messageElement.classList.add('notice-message');
+                messageElement.innerHTML = `
+                    <div class="alert alert-warning mb-2">
+                        <strong>[공지사항] ${message.sender}:</strong> ${message.message}
+                    </div>
+                `;
+            } else if (message.type === 'CHAT') {
                 messageElement.classList.add('chat-message');
                 const isMine = message.sender === username;
                 messageElement.classList.add(isMine ? 'mine' : 'other');
@@ -264,6 +278,14 @@
 
         #chat-messages::-webkit-scrollbar-thumb:hover {
             background: #555;
+        }
+
+        .notice-message {
+            padding: 5px 15px;
+        }
+
+        .notice-message .alert {
+            margin-bottom: 0;
         }
     </style>
 </th:block>

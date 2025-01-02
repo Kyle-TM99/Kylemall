@@ -13,17 +13,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Member {
 
-    private String id;
-    private String name;
-    private String pass;
-    private String email;
-    private String mobile;
-    private String zipcode;
-    private String address1;
-    private String address2;
-    private boolean emailGet;
-    private Timestamp regDate;
-    private String nickname;
-    private String isAdmin;
+    private String id;                 // 고유 ID
+    private String name;               // 이름
+    private String pass;               // 비밀번호
+    private String email;              // 이메일
+    private String mobile;             // 휴대폰 번호
+    private String zipcode;            // 우편번호
+    private String address1;           // 주소 1
+    private String address2;           // 주소 2
+    private boolean emailGet;          // 이메일 수신 여부
+    private Timestamp regDate;     	   // 등록일
+    private String nickname;           // 닉네임
+    private boolean isAdmin;           // 관리자 여부
+    private boolean isSocial;          // 소셜 계정 여부
+    private String socialType;         // 소셜 로그인 유형 (none, kakao, google)
+    private String profileImage;       // 프로필 이미지 URL
 	
 }

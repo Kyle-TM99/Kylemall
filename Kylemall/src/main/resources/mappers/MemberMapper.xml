@@ -11,6 +11,7 @@
 	완전한 클래스 이름(패키지를 포함한 이름)을 지정하면 된다.   
 -->
 <mapper namespace="com.kylemall.shop.mapper.MemberMapper">
+	
 
 	<!-- 회원 id에 해당하는 회원 정보를 삭제하는 맵핑 구문 -->
 	<delete id="deleteMember">

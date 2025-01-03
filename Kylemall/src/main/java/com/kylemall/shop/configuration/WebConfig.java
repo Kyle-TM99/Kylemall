@@ -21,17 +21,13 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addViewController("/productList").setViewName("views/productList");
 		registry.addViewController("/joinChoice").setViewName("member/joinChoice");
 		registry.addViewController("/overlapIdCheck").setViewName("member/overlapIdCheck");
+		//registry.addViewController("/oauth/kakao/additionalInfo").setViewName("member/additionalInfo");
 	}
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-		/*
-		 * 기존에 정적 리소스 핸들러의 설정은 그대로 유지하며 새로운 리소스 핸들러 추가 /resources/** 로 요청되는 리소스 요청 설정
-		 **/
-		registry.addResourceHandler("/resources/files/**")
-				// file: 프로토콜을 사용하면 업로드한 이미지가 바로 보인다.
-				.addResourceLocations("file:./src/main/resources/static/files/").setCachePeriod(1); // 캐쉬 지속시간(초)
+		registry.addResourceHandler("/static/**")
+				.addResourceLocations("classpath:/static/");
 	}
 
 	  @Override 
@@ -49,6 +45,8 @@ public class WebConfig implements WebMvcConfigurer {
 	                      "/joinForm", // 회원가입 페이지
 	                      "/overlapIdCheck", // 아이디 중복 확인 페이지
 	                      "/joinResult",     
+	                      "/oauth/kakao/**", // 카카오 로그인 관련 모든 경로 추가
+	                      "/error",         // 에러 페이지 추가
 	                      "/css/**",        // 정적 자원 (CSS)
 	                      "/js/**",         // 정적 자원 (JS)
 	                      "/images/**",      // 정적 자원 (이미지)

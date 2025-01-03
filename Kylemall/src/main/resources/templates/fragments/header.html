@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <!-- Navigation-->
-<div th:fragment="header" class="container border-bottom">
+<div th:fragment="header" class="header-container">
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container px-4 px-lg-5">
 			<a class="navbar-brand" href="mainList"><img src="images/kylemall2.png" alt="..." width="100" height="15" /></a>
@@ -54,7 +54,9 @@
 								<hr class="dropdown-divider" />
 							</li>
 							<li><a class="dropdown-item" href="memberUpdateForm">회원수정</a></li>
-							<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
+							<!--<th:block th:unless="${session.member.socialType == 'kakao'}">-->
+								<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
+							<!--</th:block>-->
 						</ul>
 					</div>
 				</th:block>

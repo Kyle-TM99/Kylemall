@@ -16,18 +16,27 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, 
 			HttpServletResponse response, Object handler) throws Exception {
-		log.info("##########LoginCheckInterceptor - preHandle()##########");
-		// 현재 세션에 저장된 loginMsg 속성을 삭제
+		log.info("LoginCheckInterceptor - preHandle()");
+		
+		// 현재 요청 URI 확인
+		String requestURI = request.getRequestURI();
+		log.info("Request URI: {}", requestURI);
+		
+		// 카카오 인증 관련 경로는 인터셉터 체크 제외
+		if (requestURI.startsWith("/oauth/kakao")) {
+			return true;
+		}
+		
 		HttpSession session = request.getSession();
 		session.removeAttribute("loginMsg");
 				
-		// 세션에 isLogin란 이름의 속성이 없으면 로그인 상태가 아님
-		if(request.getSession().getAttribute("isLogin") == null) {
-			// 로그인 상태가 아니라면 로그인 폼으로 리다이렉트 시킨다.
-			response.sendRedirect("loginForm");
+		// 세션에 isLogin이 없으면 로그인 상태가 아님
+		if(session.getAttribute("isLogin") == null) {
+			response.sendRedirect("/loginForm");
 			session.setAttribute("loginMsg", "로그인이 필요한 서비스");
 			return false;
-		}		
+		}
+		
 		return true;
 	}
 

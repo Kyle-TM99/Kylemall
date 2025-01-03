@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -21,11 +22,25 @@ import org.springframework.web.client.RestTemplate;
 import com.kylemall.shop.domain.Member;
 import com.kylemall.shop.service.MemberService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.UUID;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 @RequestMapping("/oauth/kakao")
 public class KakaoController {
+
+    private static final Logger log = LoggerFactory.getLogger(KakaoController.class);
 
     @Value("${kakao.client.id}")
     private String CLIENT_ID;
@@ -36,54 +51,121 @@ public class KakaoController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/callback")
-    public String kakaoCallback(@RequestParam String code, HttpSession session, Model model) {
-        try {
-            String accessToken = requestAccessToken(code);
-            Map<String, Object> userData = requestUserInfo(accessToken);
+    @Autowired
+    private HttpServletRequest request;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping("/callback")
+    public String kakaoCallback(
+        @RequestParam(name = "code", required = true) String code,
+        @RequestParam(name = "error", required = false) String error,
+        @RequestParam(name = "error_description", required = false) String errorDescription,
+        HttpSession session,
+        Model model) {
+        
+        log.info("=== Kakao Callback Start ===");
+        
+        // 에러가 있는 경우 처리
+        if (error != null) {
+            log.error("Kakao auth error: {}, description: {}", error, errorDescription);
+            return "redirect:/loginForm?error=kakao";
+        }
+        
+        try {
+            // 1. 액세스 토큰 받기
+            String accessToken = requestAccessToken(code);
+            log.info("Access token received: {}", accessToken);
+            
+            // 2. 사용자 정보 받기
+            Map<String, Object> userData = requestUserInfo(accessToken);
+            log.info("User info received: {}", userData);
+            
+            // 3. 카카오 ID 추출
             String kakaoId = userData.get("id").toString();
             Map<String, Object> properties = (Map<String, Object>) userData.get("properties");
             String nickname = (String) properties.get("nickname");
             String profileImage = (String) properties.get("profile_image");
-
-            Member member = processKakaoUser(kakaoId, nickname, profileImage, session);
-            if (member != null) {
-                return "redirect:/home";
+            
+            // 4. 기존 회원인지 확인
+            Member existingMember = memberService.getMember(kakaoId);
+            log.info("Existing member check - kakaoId: {}, exists: {}", kakaoId, existingMember != null);
+            
+            if (existingMember != null) {
+                // 5a. 기존 회원이면 로그인 처리
+                log.info("Existing member found. Logging in...");
+                session.setAttribute("member", existingMember);
+                session.setAttribute("isLogin", true);
+                return "redirect:/mainList";
             } else {
+                // 5b. 신규 회원이면 추가 정보 입력 페이지로
+                log.info("New member. Redirecting to additional info page...");
                 model.addAttribute("kakaoId", kakaoId);
                 model.addAttribute("nickname", nickname);
-                return "additionalInfo";
+                model.addAttribute("profileImage", profileImage);
+                return "member/additionalInfo";
             }
         } catch (Exception e) {
-            return "errorPage"; // 오류 페이지로 이동
+            log.error("Error in kakao callback", e);
+            return "redirect:/loginForm?error=kakao";
         }
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam("kakaoId") String kakaoId,
-                           @RequestParam("emailId") String emailId,
-                           @RequestParam("emailDomain") String emailDomain,
-                           @RequestParam("mobile1") String mobile1,
-                           @RequestParam("mobile2") String mobile2,
-                           @RequestParam("mobile3") String mobile3,
-                           @RequestParam(value = "emailGet", required = false, defaultValue = "false") boolean emailGet,
-                           HttpSession session) {
-        if (memberService.getMember(kakaoId) != null) {
-            throw new IllegalArgumentException("이미 가입된 사용자입니다.");
+    public String register(
+        @RequestParam(name = "id") String kakaoId,
+        @RequestParam(name = "name") String name,
+        @RequestParam(name = "nickname") String nickname,
+        @RequestParam(name = "emailId") String emailId,
+        @RequestParam(name = "emailDomain") String emailDomain,
+        @RequestParam(name = "mobile1") String mobile1,
+        @RequestParam(name = "mobile2") String mobile2,
+        @RequestParam(name = "mobile3") String mobile3,
+        @RequestParam(name = "zipcode") String zipcode,
+        @RequestParam(name = "address1") String address1,
+        @RequestParam(name = "address2") String address2,
+        @RequestParam(name = "emailGet", defaultValue = "false") boolean emailGet,
+        @RequestParam(name = "profileImage", required = false) String profileImage,
+        HttpSession session) {
+        
+        try {
+            log.info("Registering new member with kakao ID: {}", kakaoId);
+            
+            // 1. 비밀번호 암호화
+            String temporaryPassword = kakaoId + UUID.randomUUID().toString().substring(0, 8);
+            String encodedPassword = passwordEncoder.encode(temporaryPassword);
+            
+            // 2. Member 객체 생성 및 설정
+            Member newMember = new Member();
+            newMember.setId(kakaoId);
+            newMember.setPass(encodedPassword);
+            newMember.setName(name);
+            newMember.setNickname(nickname);
+            newMember.setEmail(emailId + "@" + emailDomain);
+            newMember.setMobile(mobile1 + mobile2 + mobile3);
+            newMember.setZipcode(zipcode);
+            newMember.setAddress1(address1);
+            newMember.setAddress2(address2);
+            newMember.setEmailGet(emailGet);
+            newMember.setProfileImage(profileImage);
+            newMember.setSocial(true);
+            newMember.setSocialType("KAKAO");
+            
+            log.info("Registering social member: {}", newMember);
+            memberService.addMember(newMember);
+            
+            // 4. 세션에 회원 정보 저장
+            session.setAttribute("member", newMember);
+            session.setAttribute("isLogin", true);
+            
+            log.info("Successfully registered and logged in member with kakao ID: {}", kakaoId);
+            return "redirect:/mainList";
+            
+        } catch (Exception e) {
+            log.error("Error during kakao member registration: {}", e.getMessage(), e);
+            return "redirect:/loginForm?error=register";
         }
-
-        Member newMember = new Member();
-        newMember.setEmail(emailId + "@" + emailDomain);
-        newMember.setMobile(mobile1 + "-" + mobile2 + "-" + mobile3);
-        newMember.setEmailGet(emailGet);
-        newMember.setId(kakaoId);
-        newMember.setSocial(true);
-        newMember.setSocialType("kakao");
-
-        memberService.addMember(newMember);
-        session.setAttribute("user", newMember);
-        return "redirect:/mainList";
     }
 
     private String requestAccessToken(String code) {
@@ -98,38 +180,66 @@ public class KakaoController {
         parameters.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameters, headers);
-        ResponseEntity<Map> response = restTemplate.exchange(
+        
+        try {
+            log.info("=== Token Request Start ===");
+            log.info("Parameters: {}", parameters);
+            
+            ResponseEntity<String> response = restTemplate.postForEntity(
                 "https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST,
                 request,
-                Map.class
-        );
-
-        return (String) response.getBody().get("access_token");
+                String.class
+            );
+            
+            log.info("Token Response Status: {}", response.getStatusCode());
+            log.info("Token Response Body: {}", response.getBody());
+            
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, Object> responseMap = mapper.readValue(response.getBody(), Map.class);
+                
+                if (responseMap.containsKey("access_token")) {
+                    return (String) responseMap.get("access_token");
+                } else {
+                    log.error("Access token not found in response");
+                    throw new RuntimeException("Failed to get access token");
+                }
+            } catch (JsonProcessingException e) {
+                log.error("Error parsing JSON response", e);
+                throw new RuntimeException("Error parsing token response", e);
+            }
+        } catch (Exception e) {
+            log.error("Token request error", e);
+            throw new RuntimeException("Failed to get access token", e);
+        }
     }
 
     private Map<String, Object> requestUserInfo(String accessToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
-        ResponseEntity<Map> response = restTemplate.exchange(
-                "https://kapi.kakao.com/v2/user/me",
-                HttpMethod.GET,
-                request,
-                Map.class
-        );
-
-        return response.getBody();
+        
+        try {
+            log.info("Requesting user info with token: {}", accessToken);
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    "https://kapi.kakao.com/v2/user/me",
+                    HttpMethod.GET,
+                    request,
+                    Map.class
+            );
+            log.info("User info received: {}", response.getBody());
+            return response.getBody();
+        } catch (Exception e) {
+            log.error("Error requesting user info", e);
+            throw e;
+        }
     }
 
-    private Member processKakaoUser(String kakaoId, String nickname, String profileImage, HttpSession session) {
-        Member existingUser = memberService.getMember(kakaoId);
-        if (existingUser != null) {
-            session.setAttribute("user", existingUser);
-            return existingUser;
-        }
-        return null;
+    @GetMapping("/additionalInfo")
+    public String showAdditionalInfoForm(Model model) {
+        return "member/additionalInfo";
     }
 }

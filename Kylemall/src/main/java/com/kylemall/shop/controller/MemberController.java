@@ -106,11 +106,8 @@ public class MemberController {
 	}
 	
 	@GetMapping("/memberLogout")
-	public String logout(HttpSession session) {	
-		log.info("MemberController.logout(HttpSession session)");
-		// 현재 세션을 종료하고 새로운 세션을 시작한다.
-		session.invalidate();
-		
+	public String logout(HttpSession session) {
+		session.invalidate();  // 세션 완전히 제거
 		return "redirect:/loginForm";
 	}
 	
@@ -183,5 +180,15 @@ public class MemberController {
 		
 		// 게시글 리스트로 리다이렉트 시킨다.
 		return "redirect:mainList";
+	}
+
+	@GetMapping("/loginForm")
+	public String loginForm(HttpSession session) {
+		// 이미 로그인된 상태면 메인으로 리다이렉트
+		Boolean isLogin = (Boolean) session.getAttribute("isLogin");
+		if (isLogin != null && isLogin) {
+			return "redirect:/mainList";
+		}
+		return "member/loginForm";
 	}
 }

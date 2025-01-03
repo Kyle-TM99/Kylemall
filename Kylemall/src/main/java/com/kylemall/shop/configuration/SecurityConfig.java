@@ -23,16 +23,21 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests(
 				authorizeHttpRequests -> 
-					authorizeHttpRequests.requestMatchers(
-								new AntPathRequestMatcher("/**"))
-					.permitAll())
-					.csrf(csrf -> csrf.ignoringRequestMatchers(
-							new AntPathRequestMatcher("/h2-console/**")))
-					.csrf(csrf -> csrf.disable())
-					.logout(logout -> logout // logout
-					//		.logoutUrl("/logout")
-							.logoutSuccessUrl("/loginForm")
-							.invalidateHttpSession(true));
+					authorizeHttpRequests
+						.requestMatchers(
+							new AntPathRequestMatcher("/oauth/kakao/**"),
+							new AntPathRequestMatcher("/login/**"),
+							new AntPathRequestMatcher("/loginForm/**"),
+							new AntPathRequestMatcher("/**")
+						).permitAll()
+			)
+			.csrf(csrf -> csrf
+				.ignoringRequestMatchers(
+					new AntPathRequestMatcher("/h2-console/**"),
+					new AntPathRequestMatcher("/oauth/kakao/**")
+				)
+			)
+			.csrf(csrf -> csrf.disable());
 		
 		return http.build();
 	}

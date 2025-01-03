@@ -43,6 +43,16 @@ dependencies {
 	implementation 'org.webjars:stomp-websocket:2.3.4'
 }
 
+compileJava {
+	options.compilerArgs << '-parameters'
+	options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs << '-parameters'
+	options.encoding = 'UTF-8'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

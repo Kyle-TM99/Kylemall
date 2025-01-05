@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -19,26 +18,19 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
-		
-		http.authorizeHttpRequests(
-				authorizeHttpRequests -> 
-					authorizeHttpRequests
-						.requestMatchers(
-							new AntPathRequestMatcher("/oauth/kakao/**"),
-							new AntPathRequestMatcher("/login/**"),
-							new AntPathRequestMatcher("/loginForm/**"),
-							new AntPathRequestMatcher("/**")
-						).permitAll()
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http
+			.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/oauth2/google/**").permitAll()
+				.requestMatchers("/login/**", "/oauth2/**", "/loginForm/**", "/**").permitAll()
+				.anyRequest().authenticated()
 			)
-			.csrf(csrf -> csrf
-				.ignoringRequestMatchers(
-					new AntPathRequestMatcher("/h2-console/**"),
-					new AntPathRequestMatcher("/oauth/kakao/**")
-				)
-			)
-			.csrf(csrf -> csrf.disable());
-		
+			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/loginForm")
+				.defaultSuccessUrl("/mainList", true)
+			);
+
 		return http.build();
 	}
 }

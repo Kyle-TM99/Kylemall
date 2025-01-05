@@ -14,22 +14,18 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.kylemall.shop.domain.Member;
 import com.kylemall.shop.service.MemberService;
-
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
@@ -50,9 +46,6 @@ public class KakaoController {
 
     @Autowired
     private MemberService memberService;
-
-    @Autowired
-    private HttpServletRequest request;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -76,6 +69,7 @@ public class KakaoController {
         try {
             // 1. 액세스 토큰 받기
             String accessToken = requestAccessToken(code);
+            session.setAttribute("accessToken", accessToken);
             log.info("Access token received: {}", accessToken);
             
             // 2. 사용자 정보 받기
@@ -107,8 +101,44 @@ public class KakaoController {
                 return "member/additionalInfo";
             }
         } catch (Exception e) {
-            log.error("Error in kakao callback", e);
+            log.error("Error in Kakao callback: ", e);
             return "redirect:/loginForm?error=kakao";
+        }
+    }
+    
+    @GetMapping("/logout")
+    public String kakaoLogout(HttpSession session) {
+        try {
+            // 1. 세션에서 저장된 액세스 토큰 가져오기
+            String accessToken = (String) session.getAttribute("accessToken");
+
+            if (accessToken != null) {
+                // 2. Kakao 로그아웃 API 호출
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setBearerAuth(accessToken);
+
+                HttpEntity<Void> request = new HttpEntity<>(headers);
+                ResponseEntity<String> response = restTemplate.exchange(
+                    "https://kapi.kakao.com/v1/user/logout",
+                    HttpMethod.POST,
+                    request,
+                    String.class
+                );
+
+                log.info("Kakao logout response: {}", response.getBody());
+            } else {
+                log.warn("No access token found in session");
+            }
+
+            // 3. 서버 세션 무효화
+            session.invalidate();
+            log.info("User session invalidated");
+
+            return "redirect:/loginForm?logout=true";
+        } catch (Exception e) {
+            log.error("Error during Kakao logout", e);
+            return "redirect:/loginForm?error=logout";
         }
     }
 

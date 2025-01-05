@@ -14,7 +14,8 @@
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-body text-center">
-                        <img src="images/basicimage.png" alt="Profile" class="profile-img mb-3" style="width: 40%; height: auto;">
+                        <!--<img src="images/basicimage.png" alt="Profile" class="profile-img mb-3" style="width: 40%; height: auto;">-->
+                        <img th:src="${member.profileImage}" alt="Profile" class="profile-img mb-3 rounded" style="width: 40%; height: auto;">
                         <h5 class="card-title">[[${member.nickname}]]</h5>
                         <p class="card-text text-muted">[[${member.email}]]</p>
                         <p class="card-text text-muted">총 구매 액 : [[${totalSpent}]]</p>

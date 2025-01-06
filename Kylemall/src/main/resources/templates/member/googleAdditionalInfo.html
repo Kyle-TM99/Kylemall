@@ -14,7 +14,7 @@ Kylemall/Kylemall/src/main/resources/templates/member/googleAdditionalInfo.html<
 		</div>
 		<form th:action="@{/login/oauth2/code/register}" method="post" id="additionalInfoForm">
 			<input type="hidden" name="id" th:value="${googleId}">
-			<input type="hidden" name="email" th:value="${googleId}">
+			<input type="hidden" name="email" th:value="${email}">
 			<input type="hidden" name="profileImage" th:value="${profileImage}">
 
 			<div class="mb-3">

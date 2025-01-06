@@ -69,7 +69,7 @@
 									<li><a class="dropdown-item" href="memberUpdateForm">회원수정</a></li>
 									<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
 								</th:block>
-								<th:block th:if="${session.member.socialType == 'kakao'}">
+								<th:block th:if="${session.member.socialType == 'kakao' || session.member.socialType == 'KAKAO'}">
 									<li><a class="dropdown-item" href="/oauth/kakao/logout">로그아웃</a></li>
 								</th:block>
 							</th:block>

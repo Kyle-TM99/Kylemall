@@ -180,7 +180,7 @@ public class KakaoController {
             newMember.setEmailGet(emailGet);
             newMember.setProfileImage(profileImage);
             newMember.setSocial(true);
-            newMember.setSocialType("KAKAO");
+            newMember.setSocialType("kakao");
             
             log.info("Registering social member: {}", newMember);
             memberService.addMember(newMember);
@@ -189,11 +189,11 @@ public class KakaoController {
             session.setAttribute("member", newMember);
             session.setAttribute("isLogin", true);
             
-            log.info("Successfully registered and logged in member with kakao ID: {}", kakaoId);
+            
             return "redirect:/mainList";
             
         } catch (Exception e) {
-            log.error("Error during kakao member registration: {}", e.getMessage(), e);
+            log.error("카카오 멤버에서 에러 확인: {}", e.getMessage(), e);
             return "redirect:/loginForm?error=register";
         }
     }

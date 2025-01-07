@@ -32,12 +32,8 @@ public class SecurityConfig {
 			
 			// HTTP 요청에 대한 접근 권한 설정
 			.authorizeHttpRequests(auth -> auth
-				// OAuth2 콜백 URL에 대한 접근을 모든 사용자에게 허용
-				.requestMatchers("/login/oauth2/code/**").permitAll()
-				// Google OAuth2 관련 경로에 대한 접근을 모든 사용자에게 허용
-				.requestMatchers("/oauth2/google/**").permitAll()
-				// 로그인, OAuth2, 그리고 모든 경로("/**")에 대한 접근을 모든 사용자에게 허용
-				.requestMatchers("/login/**", "/oauth2/**", "/loginForm/**", "/**").permitAll()
+				// Google 콜백 URL에 대한 접근을 명시적으로 허용
+				.requestMatchers("/login/**", "/oauth2/**", "/google/**", "/loginForm/**", "/**").permitAll()
 				// 위에서 설정한 경로 외의 모든 요청은 인증된 사용자만 접근 가능
 				.anyRequest().authenticated()
 			)
@@ -48,13 +44,26 @@ public class SecurityConfig {
 				.loginPage("/loginForm")
 				// 로그인 성공 시 실행될 핸들러 설정
 				.successHandler((request, response, authentication) -> {
+					// 인증 성공 후 처리
 					OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-					request.getSession().setAttribute("oauth2User", oauth2User);
+					String email = oauth2User.getAttribute("email");
 					
-					// 직접 forward 수행
-					request.getRequestDispatcher("/login/oauth2/code/google")
-						.forward(request, response);
+					// 로그 추가
+					log.info("OAuth2 Login Success. Email: {}", email);
+					
+					// 컨트롤러로 OAuth2User 전달
+					request.setAttribute("oauth2User", oauth2User);
+					request.getRequestDispatcher("/google/callback").forward(request, response);
 				})
+				.failureHandler((request, response, exception) -> {
+					// 인증 실패 시 처리
+					log.error("OAuth2 Login Failed: {}", exception.getMessage());
+					
+					// 컨트롤러의 매핑된 URL로 포워드
+					request.getRequestDispatcher("/loginForm?error=true").forward(request, response);
+				})
+				.userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService())
+				)
 			);
 	
 		return http.build();  // 설정이 완료된 SecurityFilterChain 객체 반환

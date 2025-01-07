@@ -1,78 +1,52 @@
-Kylemall/Kylemall/src/main/resources/templates/member/googleAdditionalInfo.html<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/main_layout}">
-<th:block layout:fragment="content">
-	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<div class="container my-5 border p-4 rounded" style="max-width: 550px">
-		<div class="text-center my-4">
-			<img th:src="@{/images/kylemall2.png}" style="width: 180px; height: 25px" />
-		</div>
-		<div class="text-center fw-bold fs-3 mb-4">
-			<p>추가 정보 입력</p>
-		</div>
-		<div class="text-center mb-5">
-			<p class="text-body-secondary">Google 계정으로 회원가입을 위해 추가 정보를 입력해주세요.</p>
-		</div>
-		<form th:action="@{/login/oauth2/code/register}" method="post" id="additionalInfoForm">
-			<input type="hidden" name="id" th:value="${googleId}">
-			<input type="hidden" name="email" th:value="${email}">
-			<input type="hidden" name="profileImage" th:value="${profileImage}">
-
-			<div class="mb-3">
-				<label for="name" class="form-label">이름</label>
-				<input type="text" class="form-control" id="name" name="name" th:value="${nickname}" required>
-			</div>
-
-			<div class="mb-3">
-				<label for="nickname" class="form-label">닉네임</label>
-				<input type="text" class="form-control" id="nickname" name="nickname" th:value="${nickname}" required>
-			</div>
-
-			<div class="row mb-3">
-				<label class="form-label">휴대폰 번호</label>
-				<div class="col-4">
-					<select class="form-select" name="mobile1" required>
-						<option value="010">010</option>
-						<option value="011">011</option>
-						<option value="016">016</option>
-						<option value="017">017</option>
-						<option value="018">018</option>
-						<option value="019">019</option>
-					</select>
-				</div>
-				<div class="col-4">
-					<input type="text" class="form-control" name="mobile2" maxlength="4" required pattern="[0-9]{4}">
-				</div>
-				<div class="col-4">
-					<input type="text" class="form-control" name="mobile3" maxlength="4" required pattern="[0-9]{4}">
-				</div>
-			</div>
-
-			<div class="mb-3">
-				<label for="zipcode" class="form-label">우편번호</label>
-				<div class="input-group">
-					<input type="text" class="form-control" id="zipcode" name="zipcode" required readonly>
-					<input type="button" class="btn btn-outline-primary" id="btnZipcode" value="우편번호 찾기">
-				</div>
-			</div>
-			<div class="mb-3">
-				<label for="address1" class="form-label">기본주소</label>
-				<input type="text" class="form-control" id="address1" name="address1" required readonly>
-			</div>
-			<div class="mb-3">
-				<label for="address2" class="form-label">상세주소</label>
-				<input type="text" class="form-control" id="address2" name="address2" required>
-			</div>
-
-			<div class="mb-3 form-check">
-				<input type="checkbox" class="form-check-input" id="emailGet" name="emailGet">
-				<label class="form-check-label" for="emailGet">이메일 수신 동의</label>
-			</div>
-
-			<div class="d-grid gap-2">
-				<button type="submit" class="btn btn-primary">가입완료</button>
-			</div>
-		</form>
-	</div>
-	<script th:src="@{/js/member.js}"></script>
-</th:block>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main_layout}">
+<head>
+    <title>추가 정보 입력</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <form action="/google/register" method="post">
+            <input type="hidden" name="id" th:value="${session.googleEmail}">
+            <input type="hidden" name="name" th:value="${session.googleName}">
+            
+            <div class="form-group">
+                <label>닉네임</label>
+                <input type="text" name="nickname" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label>휴대폰</label>
+                <div class="d-flex">
+                    <input type="text" name="mobile1" class="form-control" maxlength="3" required>
+                    <input type="text" name="mobile2" class="form-control" maxlength="4" required>
+                    <input type="text" name="mobile3" class="form-control" maxlength="4" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>우편번호</label>
+                <input type="text" name="zipcode" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label>주소</label>
+                <input type="text" name="address1" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label>상세주소</label>
+                <input type="text" name="address2" class="form-control">
+            </div>
+            
+            <div class="form-check">
+                <input type="checkbox" name="emailGet" class="form-check-input">
+                <label class="form-check-label">이메일 수신 동의</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">가입하기</button>
+        </form>
+    </div>
+</body>
 </html>

@@ -17,9 +17,11 @@ import org.springframework.ui.Model;
 
 import com.kylemall.shop.domain.Member;
 import java.util.UUID;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @Slf4j
+@RequestMapping("/google")
 public class GoogleController {
 
     @Autowired
@@ -28,41 +30,43 @@ public class GoogleController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/login/oauth2/code/google")
-    public String googleCallback(HttpSession session, Model model) {
+    @GetMapping("/callback")
+    public String handleGoogleCallback(HttpServletRequest request, HttpSession session) {
+        log.info("GoogleController.handleGoogleCallback() 실행");
+        
+        OAuth2User oauth2User = (OAuth2User) request.getAttribute("oauth2User");
+        if (oauth2User == null) {
+            log.error("OAuth2User is null");
+            return "redirect:/loginForm?error=auth";
+        }
+        
         try {
-            OAuth2User oauth2User = (OAuth2User) session.getAttribute("oauth2User");
-            if (oauth2User == null) {
-                log.error("OAuth2User is null");
-                return "redirect:/loginForm?error=auth";
-            }
-
-            log.debug("OAuth2User attributes: {}", oauth2User.getAttributes());
-            
             String email = oauth2User.getAttribute("email");
             String name = oauth2User.getAttribute("name");
             String picture = oauth2User.getAttribute("picture");
             
-            // 이메일로 기존 회원 확인
-            Member existingMember = memberService.getMember(email);
+            log.info("Google OAuth2 User 정보: email={}, name={}", email, name);
             
-            if (existingMember != null) {
-                // 기존 회원이면 세션에 저장하고 메인으로
-                session.setAttribute("member", existingMember);
-                session.setAttribute("isLogin", true);
-                return "redirect:/mainList";
-            } else {
-                // 신규 회원이면 추가 정보 입력 페이지로
-                model.addAttribute("googleId", email);
-                model.addAttribute("nickname", name);
-                model.addAttribute("profileImage", picture);
-                model.addAttribute("email", email);
-                return "member/googleAdditionalInfo";
+            // 기존 회원인지 확인
+            Member member = memberService.getMember(email);
+            
+            if (member == null) {
+                // 신규 회원인 경우 추가 정보 입력 페이지로 이동
+                session.setAttribute("googleEmail", email);
+                session.setAttribute("googleName", name);
+                session.setAttribute("googlePicture", picture);
+                return "/member/googleAdditionalInfo";
             }
             
+            // 기존 회원인 경우 로그인 처리
+            session.setAttribute("member", member);
+            session.setAttribute("isLogin", true);
+            
+            return "redirect:/mainList";
+            
         } catch (Exception e) {
-            log.error("Error during Google authentication: {}", e.getMessage(), e);
-            return "redirect:/loginForm?error=auth";
+            log.error("Google 로그인 처리 중 오류 발생: {}", e.getMessage(), e);
+            return "redirect:/loginForm?error=google";
         }
     }
 
@@ -78,7 +82,6 @@ public class GoogleController {
             @RequestParam("address1") String address1,
             @RequestParam("address2") String address2,
             @RequestParam(value = "emailGet", defaultValue = "false") boolean emailGet,
-            @RequestParam(value = "profileImage", required = false) String profileImage,
             HttpSession session) {
         
         try {
@@ -86,7 +89,7 @@ public class GoogleController {
             
             Member newMember = new Member();
             newMember.setId(googleId);
-            newMember.setPass(passwordEncoder.encode(googleId)); // 이메일을 임시 비밀번호로 사용
+            newMember.setPass(passwordEncoder.encode(UUID.randomUUID().toString())); // 랜덤 비밀번호
             newMember.setName(name);
             newMember.setNickname(nickname);
             newMember.setEmail(googleId); // 구글 이메일 사용
@@ -95,7 +98,6 @@ public class GoogleController {
             newMember.setAddress1(address1);
             newMember.setAddress2(address2);
             newMember.setEmailGet(emailGet);
-            newMember.setProfileImage(profileImage);
             newMember.setSocial(true);
             newMember.setSocialType("google");
             

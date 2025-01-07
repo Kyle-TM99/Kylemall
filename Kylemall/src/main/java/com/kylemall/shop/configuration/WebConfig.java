@@ -52,8 +52,11 @@ public class WebConfig implements WebMvcConfigurer {
 	                      "/images/**",      // 정적 자원 (이미지)
 	                      "/kylemallproducts/**",      // 정적 자원 (이미지)
 	                      "/assets/**",
-	                      "/bootstrap/**"
+	                      "/bootstrap/**",
+												"/google/**",  // Google OAuth2 관련 경로 제외
+               				  "/loginForm/**"
 	              );
 	  }
+
 
 }

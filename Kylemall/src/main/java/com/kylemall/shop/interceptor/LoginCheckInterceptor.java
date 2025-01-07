@@ -27,6 +27,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		
+		if (requestURI.startsWith("/google/")) {
+			return true;
+		}
+		
 		HttpSession session = request.getSession();
 		session.removeAttribute("loginMsg");
 				

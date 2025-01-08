@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ProductService {
 	
-	private static final int MANAGEMENT_SIZE = 10;
+	private static final int MANAGEMENT_SIZE = 8;
 	private static final int PAGE_SIZE = 8;
 	private static final int PAGE_GROUP = 10;
 	

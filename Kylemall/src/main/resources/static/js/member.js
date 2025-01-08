@@ -131,9 +131,7 @@ $(function() {
 	});
 		
 	// 회원 가입 폼이 서브밋 될 때 이벤트 처리 - 폼 유효성 검사
-	$("#joinForm").on("submit", function() {
-		return joinFormCheck();
-	});
+	$("#joinForm").on("submit", joinFormCheck);
 	
 	/* 회원정보 수정 폼에서 "비밀번호 확인" 버튼이 클릭될 때 이벤트 처리
 	 * 회원정보 수정 폼에서 기존 비밀번호가 맞는지를 Ajax 통신을 통해 확인한다.
@@ -189,6 +187,101 @@ $(function() {
 		 **/ 
 		return joinFormCheck();
 	});	
+
+	// 카카오 추가 정보 입력 폼 유효성 검사
+	$("form[action='/oauth/kakao/register']").on("submit", function() {
+		var emailId = $("#emailId").val();
+		var emailDomain = $("#emailDomain").val();
+		var mobile2 = $("#mobile2").val();
+		var mobile3 = $("#mobile3").val();
+
+		if(emailId.length == 0) {
+			alert("이메일 아이디가 입력되지 않았습니다.\n이메일 아이디를 입력해주세요");
+			$("#emailId").focus();
+			return false;
+		}
+		if(emailDomain.length == 0) {
+			alert("이메일 도메인이 입력되지 않았습니다.\n이메일 도메인을 입력해주세요");
+			$("#emailDomain").focus();
+			return false;
+		}
+		if(mobile2.length == 0 || mobile3.length == 0) {
+			alert("휴대폰 번호가 입력되지 않았습니다.\n휴대폰 번호를 입력해주세요");
+			$("#mobile2").focus();
+			return false;
+		}
+		if(mobile2.length !== 4 || mobile3.length !== 4) {
+			alert("휴대폰 번호를 정확히 입력해주세요");
+			$("#mobile2").focus();
+			return false;
+		}
+	});
+
+	// 구글 추가 정보 입력 폼 유효성 검사
+	$("form[action='/google/register']").on("submit", function() {
+		var mobile2 = $("#mobile2").val();
+		var mobile3 = $("#mobile3").val();
+
+		if(mobile2.length == 0 || mobile3.length == 0) {
+			alert("휴대폰 번호가 입력되지 않았습니다.\n휴대폰 번호를 입력해주세요");
+			$("#mobile2").focus();
+			return false;
+		}
+		if(mobile2.length !== 4 || mobile3.length !== 4) {
+			alert("휴대폰 번호를 정확히 입력해주세요");
+			$("#mobile2").focus();
+			return false;
+		}
+	});
+
+	// 휴대폰 번호 입력 필드 숫자만 입력 가능하도록 처리
+	$("#mobile2, #mobile3").on("keyup", function() {
+		var regExp = /[^0-9]/g;
+		if(regExp.test($(this).val())) {
+			alert("숫자만 입력할 수 있습니다.");
+			$(this).val($(this).val().replace(regExp, ""));
+		}
+	});
+
+	// 이메일 도메인 선택 이벤트 처리 (추가 정보 입력 폼용)
+	$("#selectDomain").on("change", function() {
+		var str = $(this).val();
+		
+		if(str == "") {
+			$("#emailDomain").val("");
+			$("#emailDomain").prop("readonly", false);
+		} else {
+			$("#emailDomain").val(str);
+			$("#emailDomain").prop("readonly", true);
+		}
+	});
+
+	// 실시간 입력 검사
+	$("#id").on("keyup", function() {
+		var regExp = /[^A-Za-z0-9]/g;
+		if(regExp.test($(this).val())) {
+			alert("아이디는 영문자와 숫자만 사용 가능합니다.");
+			$(this).val($(this).val().replace(regExp, ""));
+		}
+		// 아이디 변경 시 중복확인 초기화
+		$("#isIdCheck").val("false");
+	});
+
+	$("#pass1, #pass2").on("keyup", function() {
+		var regExp = /[^A-Za-z0-9@$!%*#?&]/g;
+		if(regExp.test($(this).val())) {
+			alert("비밀번호는 문자, 숫자, 특수문자를 사용 가능합니다.");
+			$(this).val($(this).val().replace(regExp, ""));
+		}
+	});
+
+	$("#mobile2, #mobile3").on("keyup", function() {
+		var regExp = /[^0-9]/g;
+		if(regExp.test($(this).val())) {
+			alert("숫자만 입력 가능합니다.");
+			$(this).val($(this).val().replace(regExp, ""));
+		}
+	});
 });
 
 /* 회원 아이디, 비밀번호, 비밀번호 확인, 이메일 아이디 폼 컨트롤에
@@ -196,9 +289,9 @@ $(function() {
  **/
 function inputCharReplace() {
 	// 아래와 같이 정규표현식을 이용해 영문 대소문자, 숫자만 입력되었는지 체크할 수 있다. 
-	var regExp = /[^A-Za-z0-9]/gi;	
+	var regExp = /[^A-Za-z0-9@$!%*#?&]/g;
 	if(regExp.test($(this).val())) {
-		alert("영문 대소문자, 숫자만 입력할 수 있습니다.");
+		alert("문자, 숫자, 특수문자를 사용 가능합니다.");
 		$(this).val($(this).val().replace(regExp, ""));
 	}
 }
@@ -219,84 +312,134 @@ function inputEmailDomainReplace() {
  **/
 function joinFormCheck() {
 	
-	var name = $("#name").val();
-	var nickname = $("#nickname").val();
-	var id = $("#id").val();
-	var pass1 = $("#pass1").val();
-	var pass2 = $("#pass2").val();
-	var zipcode = $("#zipcode").val();
-	var address1 = $("#address1").val();
-	var address2 = $("#address2").val();
-	var emailId = $("#emailId").val();
-	var emailDomain = $("#emailDomain").val();
-	var mobile2 = $("#mobile2").val();
-	var mobile3 = $("#mobile3").val();
-	var isIdCheck = $("#isIdCheck").val();
-	
-	if(name.length == 0) {		
-		alert("이름이 입력되지 않았습니다.\n이름을 입력해주세요");
-		$("#name").focus();
-		return false;
-	}	
-	if(nickname.length == 0) {		
-		alert("닉네임이 입력되지 않았습니다.\n닉네임을 입력해주세요");
-		$("#nickname").focus();
-		return false;
-	}	
-	if(id.length == 0) {		
-		alert("아이디가 입력되지 않았습니다.\n아이디를 입력해주세요");
-		$("#id").focus();
-		return false;
-	}		
-	if(isIdCheck == 'false') {		
-		alert("아이디 중복 체크를 하지 않았습니다.\n아이디 중복 체크를 해주세요");
-		return false;
-	}	
-	if(pass1.length == 0) {		
-		alert("비밀번호가 입력되지 않았습니다.\n비밀번호를 입력해주세요");
-		$("#pass1").focus();
-		return false;
-	}
-	if(pass2.length == 0) {		
-		alert("비밀번호 확인이 입력되지 않았습니다.\n비밀번호 확인을 입력해주세요");
-		$("#pass2").focus();
-		return false;
-	}
-	if(pass1 != pass2) {
-		alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
-		$("#pass1").focus();
-		return false;
-	}	
-	if(zipcode.length == 0) {		
-		alert("우편번호가 입력되지 않았습니다.\n우편번호를 입력해주세요");
-		$("#zipcode").focus();
-		return false;
-	}	
-	if(address1.length == 0) {		
-		alert("주소가 입력되지 않았습니다.\n주소를 입력해주세요");
-		$("#address1").focus();
-		return false;
-	}	
-	if(address2.length == 0) {		
-		alert("상세주소가 입력되지 않았습니다.\n상세주소를 입력해주세요");
-		$("#address2").focus();
-		return false;
-	}	
-	if(mobile2.length == 0 || mobile3.length == 0) {		
-		alert("휴대폰 번호가 입력되지 않았습니다.\n휴대폰 번호를 입력해주세요");
-		$("#mobile2").focus();
-		return false;
-	}
-	if(emailId.length == 0) {
-		alert("이메일 아이디가 입력되지 않았습니다.\n이메일 아이디를 입력해주세요");
-		$("#emailId").focus();
-		return false;
-	}
-	if(emailDomain.length == 0) {		
-		alert("이메일 도메인이 입력되지 않았습니다.\n이메일 도메인을 입력해주세요");
-		$("#emailDomain").focus();
-		return false;
-	}
+		var id = $("#id").val();
+		var nickname = $("#nickname").val();
+		var pass1 = $("#pass1").val();
+		var pass2 = $("#pass2").val();
+		var name = $("#name").val();
+		var emailId = $("#emailId").val();
+		var emailDomain = $("#emailDomain").val();
+		var mobile2 = $("#mobile2").val();
+		var mobile3 = $("#mobile3").val();
+		var zipcode = $("#zipcode").val();
+		var address1 = $("#address1").val();
+		var address2 = $("#address2").val();
+		var isIdCheck = $("#isIdCheck").val();
+
+		// 아이디 검사
+		if(id.length == 0) {
+			alert("아이디가 입력되지 않았습니다.");
+			$("#id").focus();
+			return false;
+		}
+		if(id.length < 5) {
+			alert("아이디는 5자 이상이어야 합니다.");
+			$("#id").focus();
+			return false;
+		}
+		if(nickname.length == 0) {
+			alert("닉네임이 입력되지 않았습니다.");
+			$("#nickname").focus();
+			return false;
+		}
+		if(isIdCheck == 'false') {
+			alert("아이디 중복 확인이 필요합니다.");
+			return false;
+		}
+
+		// 비밀번호 검사
+		if(pass1.length == 0) {
+			alert("비밀번호가 입력되지 않았습니다.");
+			$("#pass1").focus();
+			return false;
+		}
+		if(pass1.length < 8) {
+			alert("비밀번호는 8자 이상이어야 합니다.");
+			$("#pass1").focus();
+			return false;
+		}
+		if(!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(pass1)) {
+			alert("비밀번호는 문자, 숫자, 특수문자를 모두 포함해야 합니다.");
+			$("#pass1").focus();
+			return false;
+		}
+
+		// 비밀번호 확인 �사
+		if(pass2.length == 0) {
+			alert("비밀번호 확인이 입력되지 않았습니다.");
+			$("#pass2").focus();
+			return false;
+		}
+		if(pass1 !== pass2) {
+			alert("비밀번호가 일치하지 않습니다.");
+			$("#pass2").focus();
+			return false;
+		}
+
+		// 이름 검사
+		if(name.length == 0) {
+			alert("이름이 입력되지 않았습니다.");
+			$("#name").focus();
+			return false;
+		}
+		if(!/^[가-힣]{2,}$/.test(name)) {
+			alert("이름은 한글로 2자 이상 입력해주세요.");
+			$("#name").focus();
+			return false;
+		}
+
+		// 이메일 검사
+		if(emailId.length == 0) {
+			alert("이메일 아이디가 입력되지 않았습니다.");
+			$("#emailId").focus();
+			return false;
+		}
+		if(emailDomain.length == 0) {
+			alert("이메일 도메인이 입력되지 않았습니다.");
+			$("#emailDomain").focus();
+			return false;
+		}
+		if(!/^[a-zA-Z0-9]+$/.test(emailId)) {
+			alert("이메일 아이디는 영문자와 숫자만 사용 가능합니다.");
+			$("#emailId").focus();
+			return false;
+		}
+		if(!/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailDomain)) {
+			alert("올바른 이메일 도메인을 입력해주세요.");
+			$("#emailDomain").focus();
+			return false;
+		}
+
+		// 휴대폰 번�� 검사
+		if(mobile2.length == 0 || mobile3.length == 0) {
+			alert("휴대폰 번호가 입력되지 않았습니다.");
+			$("#mobile2").focus();
+			return false;
+		}
+		if(!/^\d{4}$/.test(mobile2) || !/^\d{4}$/.test(mobile3)) {
+			alert("휴대폰 번호는 각각 4자리 숫자여야 합니다.");
+			$("#mobile2").focus();
+			return false;
+		}
+
+		// 주소 검사
+		if(zipcode.length == 0) {
+			alert("우편번호가 입력되지 않았습니다.\n우편번호 찾기를 클릭해주세요.");
+			$("#btnZipcode").focus();
+			return false;
+		}
+		if(address1.length == 0) {
+			alert("기본주소가 입력되지 않았습니다.");
+			$("#btnZipcode").focus();
+			return false;
+		}
+		if(address2.length == 0) {
+			alert("상세주소가 입력되지 않았습니다.");
+			$("#address2").focus();
+			return false;
+		}
+
+		return true;
 }
 
 function findZipcode() {

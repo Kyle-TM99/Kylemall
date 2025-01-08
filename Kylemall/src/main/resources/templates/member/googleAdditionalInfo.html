@@ -1,52 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/main_layout}">
-<head>
-    <title>추가 정보 입력</title>
-</head>
-<body>
-    <div layout:fragment="content">
-        <form action="/google/register" method="post">
-            <input type="hidden" name="id" th:value="${session.googleEmail}">
-            <input type="hidden" name="name" th:value="${session.googleName}">
-            
-            <div class="form-group">
-                <label>닉네임</label>
-                <input type="text" name="nickname" class="form-control" required>
-            </div>
-            
-            <div class="form-group">
-                <label>휴대폰</label>
-                <div class="d-flex">
-                    <input type="text" name="mobile1" class="form-control" maxlength="3" required>
-                    <input type="text" name="mobile2" class="form-control" maxlength="4" required>
-                    <input type="text" name="mobile3" class="form-control" maxlength="4" required>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main_layout}">
+
+<div layout:fragment="content">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card shadow-lg" style="width: 500px; border-radius: 15px; border: none;">
+            <div class="card-body p-5">
+                <!-- 로고 -->
+                <div class="text-center mb-4">
+                    <img src="images/kylemall2.png" alt="KyleMall Logo" style="width: 200px; height: auto;" />
                 </div>
+
+                <h2 class="text-center mb-4 fw-light">��가 정보 입력</h2>
+                <p class="text-center text-muted mb-4">Google 계정으로 회원가입을 완료하기 위해<br>추가 정보를 입력해주세요.</p>
+
+                <form action="/google/register" method="post">
+                    <input type="hidden" name="id" th:value="${id}">
+                    <input type="hidden" name="name" th:value="${name}">
+                    <input type="hidden" name="email" th:value="${email}">
+                    
+                    <!-- 연락처 -->
+                    <div class="mb-3">
+                        <label class="form-label">연락처</label>
+                        <div class="input-group">
+                            <select class="form-select" style="max-width: 100px;" name="mobile1" id="mobile1">
+                                <option value="010">010</option>
+                                <option value="011">011</option>
+                                <option value="016">016</option>
+                                <option value="017">017</option>
+                                <option value="018">018</option>
+                                <option value="019">019</option>
+                            </select>
+                            <span class="input-group-text">-</span>
+                            <input type="text" class="form-control" name="mobile2" id="mobile2" maxlength="4">
+                            <span class="input-group-text">-</span>
+                            <input type="text" class="form-control" name="mobile3" id="mobile3" maxlength="4">
+                        </div>
+                    </div>
+
+                    <!-- 이메일 수신 여부 -->
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="emailGet" name="emailGet">
+                            <label class="form-check-label" for="emailGet">
+                                이메일 수신 동의
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 가입완료 버튼 -->
+                    <button type="submit" class="btn btn-primary w-100" style="height: 50px;">가입완료</button>
+                </form>
             </div>
-            
-            <div class="form-group">
-                <label>우편번호</label>
-                <input type="text" name="zipcode" class="form-control" required>
-            </div>
-            
-            <div class="form-group">
-                <label>주소</label>
-                <input type="text" name="address1" class="form-control" required>
-            </div>
-            
-            <div class="form-group">
-                <label>상세주소</label>
-                <input type="text" name="address2" class="form-control">
-            </div>
-            
-            <div class="form-check">
-                <input type="checkbox" name="emailGet" class="form-check-input">
-                <label class="form-check-label">이메일 수신 동의</label>
-            </div>
-            
-            <button type="submit" class="btn btn-primary">가입하기</button>
-        </form>
+        </div>
     </div>
-</body>
+</div>
+
+<!-- Custom CSS -->
+<th:block layout:fragment="css">
+    <style>
+        .form-control:focus, .form-select:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        .btn-primary {
+            background-color: #4A90E2;
+            border-color: #4A90E2;
+        }
+
+        .btn-primary:hover {
+            background-color: #357ABD;
+            border-color: #357ABD;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            color: #495057;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+    </style>
+</th:block>
+
 </html>

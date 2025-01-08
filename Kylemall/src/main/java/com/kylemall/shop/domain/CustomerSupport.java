@@ -16,5 +16,6 @@ public class CustomerSupport {
 	private Integer faqId;
 	private String question;
 	private String answer;
+	private Timestamp regDate;
 	
 }

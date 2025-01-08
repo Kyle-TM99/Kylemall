@@ -35,6 +35,11 @@ public class MemberController {
 	@Autowired
 	private PaymentService paymentService;
 	
+	@GetMapping("/joinForm")
+	public String memberJoinForm(Model model) {
+		return "member/memberJoinForm";
+	}
+
 	@GetMapping("/deleteMember")
 	public String deleteMember(Model model, HttpSession session) {
 		
@@ -58,11 +63,6 @@ public class MemberController {
 		model.addAttribute("orderSummary", paymentService.getAllOrderSummary(member.getId()));
 		
 		return "member/myPage";
-	}
-	
-	@GetMapping("/joinChoice")
-	public String joinChoice(Model model) {
-		return "member/joinChoice";
 	}
 	 
 	@PostMapping("/login")	
@@ -142,6 +142,9 @@ public class MemberController {
 		member.setEmail(emailId + "@" + emailDomain);
 		member.setMobile(mobile1 + "-" + mobile2 + "-" + mobile3);
 		member.setEmailGet(Boolean.valueOf(emailGet));
+		member.setSocialType("none");
+		member.setSocial(false);
+		member.setProfileImage("/static/images/defaultProfile.png");
 		
 		// MemberService를 통해서 회원 가입 폼에서 들어온 데이터를 DB에 저장한다.
 		memberService.addMember(member);

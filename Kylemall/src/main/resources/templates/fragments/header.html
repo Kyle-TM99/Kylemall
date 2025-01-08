@@ -1,94 +1,93 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<!-- Navigation-->
 <div th:fragment="header" class="header-container">
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<div class="container px-4 px-lg-5">
-			<a class="navbar-brand" href="mainList"><img src="images/kylemall2.png" alt="..." width="100"
-					height="15" /></a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-				aria-label="Toggle navigation">
+	<nav class="navbar navbar-expand-lg">
+		<div class="container">
+			<!-- 로고 -->
+			<a class="navbar-brand" href="mainList">
+				<img src="images/kylemall3.png" alt="KyleMall" height="35"/>
+			</a>
+
+			<!-- 모바일 토글 버튼 -->
+			<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
-					<!-- <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">상품 랭킹</a></li> -->
-					<li class="nav-item"><a class="nav-link" href="#!"></a></li>
-					<li class="nav-item dropdown me-3"><a class="nav-link dropdown-toggle" id="navbarDropdown"
-							role="button" data-bs-toggle="dropdown" aria-expanded="false">카테고리</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+			<!-- 네비게이션 ��뉴 -->
+			<div class="collapse navbar-collapse" id="navbarContent">
+				<ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+					<li class="nav-item dropdown">
+						<a class="nav-link" href="#" data-bs-toggle="dropdown">
+							카테고리 <i class="bi bi-chevron-down"></i>
+						</a>
+						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="productList?category=1">아우터</a></li>
-							<li>
-								<hr class="dropdown-divider" />
-							</li>
 							<li><a class="dropdown-item" href="productList?category=2">상의</a></li>
 							<li><a class="dropdown-item" href="productList?category=3">하의</a></li>
 						</ul>
 					</li>
-					<li class="nav-item dropdown me-3">
-						<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-							aria-expanded="false">고객지원</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<!--<li><a class="dropdown-item" href="productList?category=1">NOTICE</a></li>
-								<li><a class="dropdown-item" href="productList?category=2">Q&A</a></li>-->
+					<li class="nav-item dropdown">
+						<a class="nav-link" href="#" data-bs-toggle="dropdown">
+							고객지원 <i class="bi bi-chevron-down"></i>
+						</a>
+						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="faq">FAQ</a></li>
 							<li><a class="dropdown-item" href="/chat">실시간 상담</a></li>
 						</ul>
 					</li>
-					<!-- 상품 등록 버튼: 관리자만 표시 -->
-					<th:block th:if="${session.member != null and session.member.isAdmin == '1'}">
-						<li class="nav-item me-3">
+					<!-- 관리자 메뉴 -->
+					<th:block th:if="${session.member != null and session.member.isAdmin == true}">
+						<li class="nav-item">
 							<a href="addProductForm" class="nav-link">상품 등록</a>
 						</li>
-						<li class="nav-item me-3">
+						<li class="nav-item">
 							<a href="productManagement" class="nav-link">상품 관리</a>
 						</li>
 					</th:block>
 				</ul>
 
-				<!-- 회원일 경우 -->
-				<th:block th:if="${session.isLogin}">
-					<form class="d-flex">
-						<a class="btn btn-outline-dark" id="shoppingCart" href="shoppingCart"> <i
-								class="bi-cart-fill me-1"></i> 장바구니 <span id="shoppingCartQuantity"
-								class="badge bg-dark text-white ms-1 rounded-pill">[[${cartCount}]]</span>
+				<!-- 우측 메뉴 -->
+				<div class="d-flex align-items-center gap-3">
+					<!-- 회원일 경우 -->
+					<th:block th:if="${session.isLogin}">
+						<!-- 장바구니 -->
+						<a class="nav-link position-relative" href="shoppingCart">
+							<i class="bi bi-bag"></i>
+							<span class="cart-badge" th:text="${cartCount}">0</span>
 						</a>
-					</form>
-					<div class="dropdown text-end mx-3">
-						<a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-							data-bs-toggle="dropdown" aria-expanded="false"> <i class="bi bi-person"></i>
-						</a>
-						<ul class="dropdown-menu text-small">
-							<li><a class="dropdown-item" href="myPage">마이페이지</a></li>
-							<li>
-								<hr class="dropdown-divider" />
-							</li>
-							<th:block th:if="${session.member != null && session.member.socialType != null}">
-								<th:block th:if="${session.member.socialType == 'none'}">
-									<li><a class="dropdown-item" href="memberUpdateForm">회원수정</a></li>
-									<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
+						
+						<!-- 프로필 드롭다운 -->
+						<div class="dropdown">
+							<a href="#" class="nav-link" data-bs-toggle="dropdown">
+								<i class="bi bi-person"></i>
+							</a>
+							<ul class="dropdown-menu dropdown-menu-end">
+								<li><a class="dropdown-item" href="myPage">마이페이지</a></li>
+								<li><hr class="dropdown-divider"></li>
+								<th:block th:if="${session.member != null && session.member.socialType != null}">
+									<th:block th:if="${session.member.socialType == 'none'}">
+										<li><a class="dropdown-item" href="memberUpdateForm">회원수정</a></li>
+										<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
+									</th:block>
+									<th:block th:if="${session.member.socialType == 'kakao' || session.member.socialType == 'KAKAO'}">
+										<li><a class="dropdown-item" href="/oauth/kakao/logout">로그아웃</a></li>
+									</th:block>
+									<th:block th:if="${session.member.socialType == 'google' || session.member.socialType == 'GOOGLE'}">
+										<li><a class="dropdown-item" href="/google/logout">로그아웃</a></li>
+									</th:block>
 								</th:block>
-								<th:block th:if="${session.member.socialType == 'kakao' || session.member.socialType == 'KAKAO'}">
-									<li><a class="dropdown-item" href="/oauth/kakao/logout">로그아웃</a></li>
-								</th:block>
-							</th:block>
-							<th:block th:unless="${session.member != null && session.member.socialType != null}">
-								<li><a class="dropdown-item" th:href="@{logout}">로그아웃</a></li>
-							</th:block>
-						</ul>
-					</div>
-				</th:block>
-				<!-- 비회원일 경우 -->
-				<th:block th:unless="${session.isLogin}">
-					<div class="d-grid gap-1 d-md-flex justify-content-md-end">
-						<a class="btn btn-outline-dark btn-sm" th:href="@{loginForm}">로그인</a> <a
-							class="btn btn-outline-dark btn-sm ms-2" href="joinChoice">회원가입</a>
-					</div>
-				</th:block>
+							</ul>
+						</div>
+					</th:block>
+
+					<!-- 비회원일 경우 -->
+					<th:block th:unless="${session.isLogin}">
+						<a class="nav-link" href="loginForm">로그인</a>
+						<a class="btn btn-dark btn-sm rounded-pill px-3" href="joinForm">회원가입</a>
+					</th:block>
+				</div>
 			</div>
 		</div>
 	</nav>
 </div>
-
 </html>

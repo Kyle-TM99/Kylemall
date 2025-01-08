@@ -21,7 +21,7 @@
             <h1>FAQ</h1>
         </header>
         <div class="text-end">
-            <th:block th:if="${session.member != null and session.member.isAdmin == '1'}">
+            <th:block th:if="${session.member != null and session.member.isAdmin == true}">
                 <a href="addFaqForm" class="btn btn-primary btn-sm">FAQ 등록</a>
             </th:block>
         </div>
@@ -32,7 +32,7 @@
 				    <div class="faq-answer fs-5">
 				        <span>[[${faq.answer}]]</span>
 				        <!-- 숨겨진 input 제거 -->
-						<th:block th:if="${session.member != null and session.member.isAdmin == '1'}">
+						<th:block th:if="${session.member != null and session.member.isAdmin == true}">
 				        	<button class="btn btn-danger btn-sm mt-2 delete-faq-btn text-end">삭제</button>
 						</th:block>
 					</div>

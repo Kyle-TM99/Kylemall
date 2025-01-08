@@ -111,6 +111,7 @@
         function onMessageReceived(payload) {
             const message = JSON.parse(payload.body);
             const messageElement = document.createElement('div');
+            const member = /*[[${session.member}]]*/ null;
             
             if(message.type === 'JOIN') {
                 messageElement.classList.add('event-message');
@@ -132,21 +133,13 @@
                 
                 messageElement.innerHTML = `
                     <div class="d-flex ${isMine ? 'justify-content-end' : 'justify-content-start'} mb-2">
-                        ${!isMine ? `
-                            <div class="chat-avatar" style="background-color: ${getAvatarColor(message.sender)}">
-                                ${message.sender.charAt(0)}
-                            </div>
-                        ` : ''}
+                        ${!isMine ? getProfileElement(message.sender) : ''}
                         <div class="message-content ms-2 me-2">
                             ${!isMine ? `<div class="fw-bold sender-name">${message.sender}</div>` : ''}
                             <div class="message-bubble">${message.message}</div>
                             <small class="text-muted timestamp">${new Date().toLocaleTimeString()}</small>
                         </div>
-                        ${isMine ? `
-                            <div class="chat-avatar" style="background-color: ${getAvatarColor(message.sender)}">
-                                ${message.sender.charAt(0)}
-                            </div>
-                        ` : ''}
+                        ${isMine ? getProfileElement(message.sender) : ''}
                     </div>
                 `;
             }
@@ -154,6 +147,28 @@
             const messageArea = document.querySelector('#chat-messages');
             messageArea.appendChild(messageElement);
             messageArea.scrollTop = messageArea.scrollHeight;
+        }
+
+        // 페로필 요소를 반환하는 함수 추가
+        function getProfileElement(sender) {
+            const member = /*[[${session.member}]]*/ null;
+            
+            if (member && member.socialType && member.socialType !== 'none') {
+                // 소셜 계정인 경우 프로필 이미지 사용
+                return `
+                    <div class="chat-avatar">
+                        <img src="${member.profileImage}" alt="${sender}" 
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                    </div>
+                `;
+            } else {
+                // 일반 계정인 경우 이니셜 아바타 사용
+                return `
+                    <div class="chat-avatar" style="background-color: ${getAvatarColor(sender)}">
+                        ${sender.charAt(0)}
+                    </div>
+                `;
+            }
         }
 
         // 페이지 로드 시 연결 시작

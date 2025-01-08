@@ -41,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
 	                      "/member/**",
 	                      "/login",
 	                      "/loginForm",     // 로그인 페이지
-	                      "/joinChoice",    // 회원가입 선택   
+	                      "/memberJoinForm",    // 회원가입   
 	                      "/joinForm", // 회원가입 페이지
 	                      "/overlapIdCheck", // 아이디 중복 확인 페이지
 	                      "/joinResult",     

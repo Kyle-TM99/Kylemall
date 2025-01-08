@@ -67,7 +67,9 @@ public class MemberService {
 			// BCryptPasswordEncoder 객체를 이용해 비밀번호를 암호화한 후 저장
 			member.setPass(passwordEncoder.encode(member.getPass()));
 			
+			log.debug("전화번호 저장 전: {}", member.getMobile());
 			memberMapper.addMember(member);
+			log.debug("전화번호 저장 후: {}", member.getMobile());
 		}
 		
 		// 회원 정보 수정 시에 기존 비밀번호가 맞는지 체크하는 메서드

@@ -18,17 +18,21 @@
 	<!-- 사용자의 주문, 배송 정보를 가져오는 맵핑 구문-->
 	<select id="getAllOrderSummary" resultType="OrderSummary">
 		SELECT 
-			* 
-		FROM 
-			orders o
-		INNER JOIN
-			payment p ON o.merchant_uid = p.merchant_uid
-		INNER JOIN
-			shipping s ON o.merchant_uid = s.merchant_uid
-		WHERE
-			o.member_id = #{memberId}
-		ORDER BY
-			o.order_updated_at DESC;
+			o.merchant_uid,
+			o.product_title,
+			o.total_amount as amount,
+			o.order_status,
+			o.order_created_at,
+			s.recipient_name,
+			s.phone_number as recipient_phone,
+			s.address as recipient_address,
+			p.payment_method,
+			p.payment_status
+		FROM orders o
+		LEFT JOIN shipping s ON o.merchant_uid = s.merchant_uid
+		LEFT JOIN payment p ON o.merchant_uid = p.merchant_uid
+		WHERE o.member_id = #{memberId}
+		ORDER BY o.order_created_at DESC
 	</select>
 	
 	<!-- 사용자가 구입한 상품 총 합계 맵핑 구문-->

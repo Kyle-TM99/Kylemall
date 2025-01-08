@@ -173,7 +173,7 @@ public class KakaoController {
             newMember.setName(name);
             newMember.setNickname(nickname);
             newMember.setEmail(emailId + "@" + emailDomain);
-            newMember.setMobile(mobile1 + mobile2 + mobile3);
+            newMember.setMobile(mobile1 + "-" + mobile2 + "-" + mobile3);
             newMember.setZipcode(zipcode);
             newMember.setAddress1(address1);
             newMember.setAddress2(address2);

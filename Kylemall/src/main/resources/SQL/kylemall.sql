@@ -24,6 +24,9 @@ CREATE TABLE IF NOT EXISTS member (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SELECT * FROM member;
 
+-- 기본 채팅방 생성
+-- INSERT INTO member VALUES ('admin', '관리자','');
+
 ######## 카테고리 ########
 DROP TABLE IF EXISTS category;
 CREATE TABLE IF NOT EXISTS category (
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS shoppingcart (
     cart_id INTEGER AUTO_INCREMENT PRIMARY KEY,
     quantity INTEGER NOT NULL,
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    member_id VARCHAR(20) NOT NULL,
+    member_id VARCHAR(50) NOT NULL,
     product_no INTEGER NOT NULL,
     CONSTRAINT member_id_fk FOREIGN KEY (member_id) REFERENCES member(id),
     CONSTRAINT product_no_fk FOREIGN KEY (product_no) REFERENCES product(product_no)
@@ -146,6 +149,15 @@ CREATE TABLE IF NOT EXISTS chat_message (
     CONSTRAINT fk_chat_sender FOREIGN KEY (sender) REFERENCES member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+######### faq 게시판 ########
+DROP TABLE IF EXISTS faq;
+CREATE TABLE IF NOT EXISTS faq(
+    faq_no INTEGER AUTO_INCREMENT PRIMARY KEY,
+    faq_title VARCHAR(50) NOT NULL,
+    faq_content VARCHAR(10000) NOT NULL,
+    faq_reg_date TIMESTAMP NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 ####### 멤버 제약 조건 casecade 추가 ########
 
 ALTER TABLE shoppingcart 
@@ -229,14 +241,14 @@ INSERT INTO product (product_name, product_description, product_price, stock_qua
 
 SELECT * FROM product;
 
-UPDATE product SET image_url = 'kylemallproducts/ulcoat.jpg' WHERE product_no = 8;
-UPDATE product SET image_url = 'kylemallproducts/padingjoggi.jpg' WHERE product_no = 10;
-UPDATE product SET image_url = 'kylemallproducts/gyungrangpading.jpg' WHERE product_no = 13;
-UPDATE product SET image_url = 'kylemallproducts/hurisjaket.jpg' WHERE product_no = 19;
-UPDATE product SET image_url = 'kylemallproducts/trenchcoat.jpg' WHERE product_no = 25;
-UPDATE product SET image_url = 'kylemallproducts/goatjipup.jpg' WHERE product_no = 16;
-UPDATE product SET image_url = 'kylemallproducts/gajukjaket.jpg' WHERE product_no = 22;
-UPDATE product SET image_url = 'kylemallproducts/downparka.jpg' WHERE product_no = 28;
+UPDATE product SET image_url = 'ulcoat.jpg' WHERE product_no = 8;
+UPDATE product SET image_url = 'padingjoggi.jpg' WHERE product_no = 10;
+UPDATE product SET image_url = 'gyungrangpading.jpg' WHERE product_no = 13;
+UPDATE product SET image_url = 'hurisjaket.jpg' WHERE product_no = 19;
+UPDATE product SET image_url = 'trenchcoat.jpg' WHERE product_no = 25;
+UPDATE product SET image_url = 'goatjipup.jpg' WHERE product_no = 16;
+UPDATE product SET image_url = 'gajukjaket.jpg' WHERE product_no = 22;
+UPDATE product SET image_url = 'downparka.jpg' WHERE product_no = 28;
 
 -- 기본 채팅방 생성
 INSERT INTO chat_room (room_id, room_name) VALUES ('public', '공개 채팅방');

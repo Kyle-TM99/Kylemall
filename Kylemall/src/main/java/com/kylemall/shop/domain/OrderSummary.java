@@ -1,16 +1,15 @@
 package com.kylemall.shop.domain;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class OrderSummary {
 	
     // payment 테이블 필드
@@ -45,4 +44,8 @@ public class OrderSummary {
     private String shippingMsg;           // 배송 메시지
     private Timestamp shippingCreatedAt;  // 배송 생성일
     private Timestamp shippingUpdatedAt;  // 배송 업데이트일
+
+    // Additional fields
+    private String recipientPhone;    // 받는사람 연락처
+    private String recipientAddress;  // 받는사람 주소
 }

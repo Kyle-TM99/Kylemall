@@ -1,5 +1,6 @@
 package com.kylemall.shop.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,6 +8,7 @@ import java.sql.Timestamp;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @ToString
 public class ChatMessage {
     private Long messageId;      // 메시지 ID

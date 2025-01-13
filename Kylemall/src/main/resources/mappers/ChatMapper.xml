@@ -4,9 +4,9 @@
     
     <insert id="insertMessage" parameterType="ChatMessage">
         INSERT INTO chat_message 
-            (room_id, sender, message, message_type, sent_at)
+            (room_id, sender, nickname, message, message_type, sent_at)
         VALUES 
-            (#{roomId}, #{sender}, #{message}, #{type}, #{sentAt})
+            (#{roomId}, #{sender}, #{nickname}, #{message}, #{type}, #{sentAt})
     </insert>
     
     <select id="getRecentMessages" resultType="ChatMessage">

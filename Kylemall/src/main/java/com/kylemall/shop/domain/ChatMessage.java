@@ -15,6 +15,7 @@ public class ChatMessage {
     private String type;         // 메시지 타입 (CHAT, JOIN, LEAVE)
     private String roomId;       // 채팅방 ID
     private String sender;       // 보내는 사람
+    private String nickname;     // 닉네임 필드 추가
     private String message;      // 메시지
     private Timestamp sentAt;    // 전송 시간
 

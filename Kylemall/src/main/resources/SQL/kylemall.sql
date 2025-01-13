@@ -149,6 +149,9 @@ CREATE TABLE IF NOT EXISTS chat_message (
     CONSTRAINT fk_chat_sender FOREIGN KEY (sender) REFERENCES member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- chat_message 테이블에 nickname 컬럼 추가
+ALTER TABLE chat_message ADD COLUMN nickname VARCHAR(20) AFTER sender;
+
 ######### faq 게시판 ########
 DROP TABLE IF EXISTS faq;
 CREATE TABLE IF NOT EXISTS faq(

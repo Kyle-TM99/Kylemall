@@ -5,8 +5,82 @@
 <head>
 	    <style>
         .chat-message {
-            padding: 5px;
-            margin-bottom: 10px;
+            margin-bottom: 1rem;
+            max-width: 85%;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 20px;
+            word-break: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .chat-message.mine {
+            margin-left: auto;
+        }
+
+        .chat-message.mine .message-bubble {
+            background-color: #4A90E2;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-message.other .message-bubble {
+            background-color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .notice-message {
+            width: 100%;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .notice-message .alert {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #FFF3CD;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* 스크롤바 숨기기 */
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+            background: transparent;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 3px;
+        }
+
+        .event-message {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            opacity: 0.7;
+        }
+
+        /* 입력창 포커스 시 아웃라인 제거 */
+        .form-control:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        /* 전송 버튼 호버 효과 */
+        .btn-primary {
+            background-color: #4A90E2;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #357ABD;
         }
 
         .chat-avatar {
@@ -16,86 +90,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
             color: white;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .message-content {
-            max-width: 70%;
-        }
-
-        .message-bubble {
-            padding: 8px 12px;
-            border-radius: 15px;
-            background-color: #f8f9fa;
-            display: inline-block;
-            word-break: break-word;
-        }
-
-        .chat-message.mine .message-bubble {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .chat-message.other .message-bubble {
-            background-color: #e9ecef;
-        }
-
-        .sender-name {
-            font-size: 0.9em;
-            margin-bottom: 2px;
-        }
-
-        .timestamp {
-            font-size: 0.75em;
-            display: block;
-            margin-top: 2px;
-        }
-
-        .event-message {
-            text-align: center;
-            padding: 5px;
-            margin: 5px 0;
-            color: #6c757d;
-        }
-
-        #chat-messages {
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 5px;
-            overflow-y: auto;
-        }
-
-        #chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        #chat-messages::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 3px;
-        }
-
-        #chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        .notice-message {
-            padding: 5px 15px;
-        }
-
-        .notice-message .alert {
-            margin-bottom: 0.5rem;
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-            color: #856404;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -105,26 +102,43 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </th:block>
 <th:block layout:fragment="content">
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>실시간 상담</h4>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                    <!-- 채팅방 헤더 -->
+                    <div class="card-header bg-white border-0 py-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <h4 class="mb-0 fw-light">실시간 상담</h4>
+                                <span class="badge bg-success ms-2 rounded-pill">온라인</span>
+                            </div>
+                            <small class="text-muted" id="userCount">접속자 수: 0</small>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div id="chat-messages" style="height: 400px; overflow-y: scroll;">
+
+                    <!-- 채팅 메시지 영역 -->
+                    <div class="card-body p-4 bg-light" style="height: 600px;">
+                        <div id="chat-messages" class="mb-4" style="height: 520px; overflow-y: auto;">
                             <!-- 채팅 메시지들이 여기에 표시됩니다 -->
                         </div>
-                        <div class="input-group mt-3">
-                            <div class="input-group-prepend d-flex align-items-center me-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="isNotice">
-                                    <label class="form-check-label" for="isNotice">공지사항</label>
+
+                        <!-- 메시지 입력 영역 -->
+                        <div class="input-group bg-white rounded-pill shadow-sm">
+                            <th:block th:if="${session.member.isAdmin}">
+                                <div class="input-group-text bg-white border-0 rounded-pill">
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input" type="checkbox" id="isNotice">
+                                        <label class="form-check-label" for="isNotice">공지</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <input type="text" id="message" class="form-control" placeholder="메시지를 입력하세요...">
-                            <button class="btn btn-primary" id="send">전송</button>
+                            </th:block>
+                            <input type="text" id="message" class="form-control border-0 rounded-pill"
+                                placeholder="메시지를 입력하세요..." style="background: transparent;">
+                            <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" 
+                                    id="send" style="width: 38px; height: 38px; margin: 3px;">
+                                <i class="bi bi-send-fill"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -136,18 +150,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:inline="javascript">
         let stompClient = null;
-        const memberid = /*[[${session.member.id}]]*/ 'default';
-        const username = /*[[${session.member.nickname}]]*/ 'default';
+        const memberId = /*[[${session.member.id}]]*/ 'default';
+        const nickname = /*[[${session.member.nickname}]]*/ 'default';
+        const socialType = /*[[${session.member.socialType}]]*/ 'none';
+        const profileImage = /*[[${session.member.profileImage}]]*/ null;
 
         function connect() {
-            if(!username) {
+            if(!memberId) {
                 console.error('Username not set');
-                window.location.href = '/loginForm';  // 로그인 페이지로 리다이렉트
+                window.location.href = '/loginForm';
                 return;
             }
 
             console.log("Connecting to chat...");
-            console.log("Username:", username);
+            console.log("Username:", memberId);
 
             const socket = new SockJS('/ws-chat');
             stompClient = Stomp.over(socket);
@@ -163,15 +179,15 @@
                 // 구독 설정
                 stompClient.subscribe('/topic/public', function(message) {
                     console.log('Received:', message);
-                    onMessageReceived(message, username);
+                    onMessageReceived(message, memberId);
                 });
 
                 // 입장 메시지 전송
                 stompClient.send("/app/chat.addUser", {}, 
                     JSON.stringify({
-                        sender: memberid,
+                        sender: memberId,
                         type: 'JOIN',
-                        message: username + ' 님이 입장하셨습니다!'
+                        message: nickname + ' 님이 입장하셨습니다!'
                     })
                 );
 
@@ -185,13 +201,17 @@
         function sendMessage() {
             const messageInput = document.querySelector('#message');
             const messageContent = messageInput.value.trim();
-            const isNotice = document.querySelector('#isNotice').checked;
+            const isNoticeCheckbox = document.querySelector('#isNotice');
+            const isNotice = isNoticeCheckbox ? isNoticeCheckbox.checked : false;
             
-            if(messageContent) {
+            if(messageContent && memberId) {
                 const chatMessage = {
-                    sender: username,
+                    sender: memberId,
+                    nickname: nickname,
                     message: messageContent,
-                    type: isNotice ? 'NOTICE' : 'CHAT'
+                    type: isNotice ? 'NOTICE' : 'CHAT',
+                    socialType: socialType,
+                    profileImage: profileImage
                 };
                 
                 if(stompClient && stompClient.connected) {
@@ -224,18 +244,18 @@
                 `;
             } else if (message.type === 'CHAT') {
                 messageElement.classList.add('chat-message');
-                const isMine = message.sender === username;
+                const isMine = message.sender === memberId;
                 messageElement.classList.add(isMine ? 'mine' : 'other');
                 
                 messageElement.innerHTML = `
                     <div class="d-flex ${isMine ? 'justify-content-end' : 'justify-content-start'} mb-2">
-                        ${!isMine ? getProfileElement(message.sender) : ''}
+                        ${!isMine ? getProfileElement(message.sender, message.nickname, message.profileImage, message.socialType) : ''}
                         <div class="message-content ms-2 me-2">
-                            ${!isMine ? `<div class="fw-bold sender-name">${message.sender}</div>` : ''}
+                            ${!isMine ? `<div class="fw-bold sender-name">${message.nickname}</div>` : ''}
                             <div class="message-bubble">${message.message}</div>
                             <small class="text-muted timestamp">${new Date().toLocaleTimeString()}</small>
                         </div>
-                        ${isMine ? getProfileElement(message.sender) : ''}
+                        ${isMine ? getProfileElement(message.sender, message.nickname, message.profileImage, message.socialType) : ''}
                     </div>
                 `;
             }
@@ -246,25 +266,32 @@
         }
 
         // 페로필 요소를 반환하는 함수 추가
-        function getProfileElement(sender) {
-            const member = /*[[${session.member}]]*/ null;
-            
-            if (member && member.socialType && member.socialType !== 'none') {
-                // 소셜 계정인 경우 프로필 이미지 사용
+        function getProfileElement(sender, nickname, profileImage, socialType) {
+            // 관리자 계정인 경우
+            if (sender === 'admin') {
+                return `
+                    <div class="chat-avatar d-flex align-items-center justify-content-center" 
+                         style="width: 40px; height: 40px; border-radius: 50%; background-color: #FF5722; color: white; font-weight: bold;">
+                        A
+                    </div>
+                `;
+            } 
+            // 소셜 계정인 경우 프로필 이미지 사용
+            if (socialType && socialType !== 'none') {
                 return `
                     <div class="chat-avatar">
-                        <img src="${member.profileImage}" alt="${sender}" 
+                        <img src="${profileImage}" alt="${nickname}" 
                              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                     </div>
                 `;
-            } else {
-                // 일반 계정인 경우 이니셜 아바타 사용
-                return `
-                    <div class="chat-avatar" style="background-color: ${getAvatarColor(sender)}">
-                        ${sender.charAt(0)}
-                    </div>
-                `;
             }
+            // 일반 계정인 경우 이니셜 아바타 사용
+            return `
+                <div class="chat-avatar d-flex align-items-center justify-content-center" 
+                     style="width: 40px; height: 40px; border-radius: 50%; background-color: ${getAvatarColor(sender)}; color: white; font-weight: bold;">
+                    ${nickname.charAt(0).toUpperCase()}
+                </div>
+            `;
         }
 
         // 페이지 로드 시 연결 시작
